@@ -13,11 +13,5 @@ exposed-modules:
 	Test.HUnit.Terminal,
 	Test.HUnit.Text,
 	Test.HUnit
-modules:
-	Test.HUnit.Base,
-	Test.HUnit.Lang,
-	Test.HUnit.Terminal,
-	Test.HUnit.Text,
-	Test.HUnit
 extensions:	CPP
 build-depends:	base
