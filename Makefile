@@ -14,6 +14,7 @@ ALL_DIRS = \
 	Test/HUnit
 
 PACKAGE = HUnit
+VERSION = 1.0
 PACKAGE_DEPS = base
 
 SRC_HC_OPTS += -cpp

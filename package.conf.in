@@ -1,24 +1,31 @@
-Package {
-	name		= "HUnit",
-	auto		= True,
-#ifdef INSTALLING
-	import_dirs	= [ "$libdir/imports" ],
-#else
-	import_dirs	= [ "$libdir/libraries/HUnit" ],
-#endif
-	source_dirs	= [],
-#ifdef INSTALLING
-	library_dirs	= [ "$libdir" ],
-#else
-	library_dirs	= [ "$libdir/libraries/HUnit" ],
-#endif
-	hs_libraries	= [ "HSHUnit" ],
-	extra_libraries	= [],
-	include_dirs	= [],
-	c_includes	= [],
-	package_deps	= [ "base" ],
-	extra_ghc_opts	= [],
-	extra_cc_opts	= [],
-	extra_frameworks = [],
-	extra_ld_opts	= []
-}
+name:		PACKAGE
+version:	VERSION
+license:	BSD3
+maintainer:	
+exposed:	True
+
+exposed-modules:
+	Test.HUnit.Base,
+	Test.HUnit.Lang,
+	Test.HUnit.Terminal,
+	Test.HUnit.Text,
+	Test.HUnit
+
+hidden-modules:
+
+import-dirs:	IMPORT_DIR
+library-dirs:	LIB_DIR
+hs-libraries:   "HSHUnit"
+extra-libs:
+
+include-dirs:
+includes:		
+depends:	base
+extra-hugs-opts:
+extra-cc-opts:
+extra-ld-opts:
+framework-dirs:
+extra-frameworks:
+haddock-interfaces:
+haddock-html:
+
