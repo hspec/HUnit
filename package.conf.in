@@ -26,6 +26,6 @@ extra-cc-opts:
 extra-ld-opts:
 framework-dirs:
 extra-frameworks:
-haddock-interfaces:
-haddock-html:
 
+haddock-interfaces:	HADDOCK_IFACE
+haddock-html:		HTML_DIR
