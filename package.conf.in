@@ -1,5 +1,3 @@
-#include "ghcconfig.h"
-
 Package {
 	name		= "HUnit",
 	auto		= True,
