@@ -1,6 +1,6 @@
 HUnitTestExc.lhs  --  test for HUnit, using Haskell language system "Exc"
 
-$Id: HUnitTestExtended.lhs,v 1.1 2004/03/26 11:23:10 malcolm Exp $
+$Id: HUnitTestExtended.lhs,v 1.1 2004/03/27 14:07:34 panne Exp $
 
 > module Main (main) where
 

@@ -604,62 +604,62 @@ returns the final counts from the test execution.
 HUnit 1.0 consists of the following files.
 <dl>
 
-<dt> Guide.html
+<dt> doc/Guide.html
 <dd>
 This document.
-<dt> Example.hs
+<dt> examples/Example.hs
 <dd>
 Haskell module that includes the examples given in the <a
 href="#GettingStarted">Getting Started</a> section. Run this
 program to make sure you understand how to use HUnit.
-<dt> src/Test/HUnit.lhs
+<dt> Test/HUnit.lhs
 <dd>
 Haskell module that you import to use HUnit.
-<dt> src/Test/HUnit/Base.lhs
+<dt> Test/HUnit/Base.lhs
 <dd>
 Haskell module that defines HUnit's basic facilities.
-<dt> src/Test/HUnit/Lang.lhs
+<dt> Test/HUnit/Lang.lhs
 <dd>
 Haskell module that defines how assertion failure is signaled and
 caught. By default, it is a copy of
-<tt>src/Test/HUnit/Lang98.lhs</tt>. Replace it by a copy of
-<tt>src/Test/HUnit/LangExtended.lhs</tt> for more robust exception behavior.
-<dt> src/Test/HUnit/Lang98.lhs
+<tt>Test/HUnit/Lang98.lhs</tt>. Replace it by a copy of
+<tt>Test/HUnit/LangExtended.lhs</tt> for more robust exception behavior.
+<dt> Test/HUnit/Lang98.lhs
 <dd>
 Haskell module that defines generic assertion failure handling.&nbsp;
 It is compliant to Haskell 98 but catches only <tt>IO</tt> errors.
-<dt> src/Test/HUnit/LangExtended.lhs
+<dt> Test/HUnit/LangExtended.lhs
 <dd>
 Haskell module that defines more robust assertion failure
 handling. It catches more (though unfortunately not all) kinds
 of exceptions. However, it works only with Hugs (Dec. 2001 or
 later) and GHC (5.00 and later).
-<dt> test/HUnitTest98.lhs
+<dt> examples/test/HUnitTest98.lhs
 <dd>
 Haskell module that tests HUnit, assuming the generic assertion
 failure handling of <tt>HUnitLang98.lhs</tt>.
-<dt> test/HUnitTestBase.lhs
+<dt> examples/test/HUnitTestBase.lhs
 <dd>
 Haskell module that defines testing support and basic (Haskell 98
 compliant) tests of HUnit (using HUnit, of course!). Contains
 more extensive and advanced examples of testing with HUnit.
-<dt> test/HUnitTestExtended.lhs
+<dt> examples/test/HUnitTestExtended.lhs
 <dd>
 Haskell module that tests HUnit, assuming the extended assertion
 failure handling of <tt>HUnitLangExc.lhs</tt>.
-<dt> src/Test/HUnit/Text.lhs
+<dt> Test/HUnit/Text.lhs
 <dd>
 Haskell module that defines HUnit's text-based test controller.
 <dt> LICENSE
 <dd>
 The license for use of HUnit.
-<dt> src/Test/HUnit/Terminal.lhs
+<dt> Test/HUnit/Terminal.lhs
 <dd>
 Haskell module that assists in checking the output of HUnit tests
 performed by the text-based test controller.
-<dt> test/TerminalTest.lhs
+<dt> examples/test/TerminalTest.lhs
 <dd>
-Haskell module that tests <tt>src/Test/HUnit/Terminal.lhs</tt> (using HUnit, of
+Haskell module that tests <tt>Test/HUnit/Terminal.lhs</tt> (using HUnit, of
 course!).
 </dl>
 

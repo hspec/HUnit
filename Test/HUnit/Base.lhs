@@ -1,6 +1,6 @@
 HUnitBase.lhs  --  basic definitions
 
-$Id: Base.lhs,v 1.1 2004/03/26 11:23:09 malcolm Exp $
+$Id: Base.lhs,v 1.1 2004/03/27 14:07:33 panne Exp $
 
 > module Test.HUnit.Base
 > (

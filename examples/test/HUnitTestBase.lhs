@@ -1,6 +1,6 @@
 HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 
-$Id: HUnitTestBase.lhs,v 1.1 2004/03/26 11:23:10 malcolm Exp $
+$Id: HUnitTestBase.lhs,v 1.1 2004/03/27 14:07:34 panne Exp $
 
 > module HUnitTestBase where
 
