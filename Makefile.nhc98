@@ -9,12 +9,7 @@ SRCS	= \
 # Here are the main rules.
 include ../Makefile.common
 
-# Here are the dependencies.
-${OBJDIR}/Test/HUnit/Text.$O: ${OBJDIR}/Test/HUnit/Base.$O
-${OBJDIR}/Test/HUnit/Lang.$O:
-${OBJDIR}/Test/HUnit/Base.$O: ${OBJDIR}/Test/HUnit/Lang.$O
-${OBJDIR}/Test/HUnit.$O: ${OBJDIR}/Test/HUnit/Base.$O \
-			${OBJDIR}/Test/HUnit/Text.$O
+# Here are any extra dependencies.
 
 # C-files dependencies.
 Test/HUnit/Text.$C: Test/HUnit/Base.$C
