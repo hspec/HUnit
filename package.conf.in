@@ -1,0 +1,26 @@
+#include "config.h"
+
+Package {
+	name		= "HUnit",
+	auto		= True,
+#ifdef INSTALLING
+	import_dirs	= [ "$libdir/imports" ],
+#else
+	import_dirs	= [ "$libdir/libraries/HUnit" ],
+#endif
+	source_dirs	= [],
+#ifdef INSTALLING
+	library_dirs	= [ "$libdir" ],
+#else
+	library_dirs	= [ "$libdir/libraries/HUnit" ],
+#endif
+	hs_libraries	= [ "HSHUnit" ],
+	extra_libraries	= [],
+	include_dirs	= [],
+	c_includes	= [],
+	package_deps	= [ "base" ],
+	extra_ghc_opts	= [],
+	extra_cc_opts	= [],
+	extra_frameworks = [],
+	extra_ld_opts	= []
+}
