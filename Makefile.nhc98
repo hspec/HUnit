@@ -12,8 +12,4 @@ include ../Makefile.common
 # Here are any extra dependencies.
 
 # C-files dependencies.
-Test/HUnit/Text.$C: Test/HUnit/Base.$C
-Test/HUnit/Lang.$C: 
-Test/HUnit/Base.$C: Test/HUnit/Lang.$C
-Test/HUnit.$C: Test/HUnit/Base.$C Test/HUnit/Text.$C
 
