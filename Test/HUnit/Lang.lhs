@@ -1,7 +1,5 @@
 Test/HUnit/Lang.lhs  --  HUnit language support.
 
-$Id: Lang.lhs,v 1.1 2004/03/27 14:07:33 panne Exp $
-
 > module Test.HUnit.Lang
 > (
 >   Assertion,

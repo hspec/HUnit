@@ -1,8 +1,5 @@
 -- Example.hs  --  Examples from HUnit user's guide
 
--- $Id: Example.hs,v 1.1 2004/03/27 14:07:34 panne Exp $
-
-
 module Main where
 
 import Test.HUnit
