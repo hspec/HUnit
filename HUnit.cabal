@@ -1,9 +1,9 @@
 name:		HUnit
 version:	1.1
-build-Depends:	haskell-src
 license:	BSD3
 homepage:	http://hunit.sourceforge.net/
 category:	Testing
+build-depends:	base
 description:
 	HUnit is a unit testing framework for Haskell, inspired by the
 	JUnit tool for Java, see: <http://www.junit.org>.
@@ -14,4 +14,3 @@ exposed-modules:
 	Test.HUnit.Text,
 	Test.HUnit
 extensions:	CPP
-build-depends:	base
