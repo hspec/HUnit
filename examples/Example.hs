@@ -32,7 +32,6 @@ tests' = test [ "test1" ~: "(foo 3)" ~: (1,2) ~=? (foo 3),
                               assertEqual "for the first result of partA," 5 x
                               partB y @? "(partB " ++ show y ++ ") failed" ]
 
-main :: IO ()
+main :: IO Counts
 main = do runTestTT tests
           runTestTT tests'
-          return ()

@@ -3,10 +3,13 @@ TerminalTest.lhs
 > import Test.HUnit.Terminal
 > import Test.HUnit
 
+> main :: IO Counts
 > main = runTestTT tests
 
-> try lab inp exp = lab ~: terminalAppearance inp ~?= exp
+> try :: String -> String -> String -> Test
+> try lab inp exp' = lab ~: terminalAppearance inp ~?= exp'
 
+> tests :: Test
 > tests = test [
 >   try "empty" "" "",
 >   try "end in \\n" "abc\ndef\n" "abc\ndef\n",

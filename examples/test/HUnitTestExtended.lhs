@@ -4,16 +4,17 @@ HUnitTestExc.lhs  --  test for HUnit, using Haskell language system "Exc"
 
 > import Test.HUnit
 > import HUnitTestBase
-> import qualified Control.Exception (assert)
 
+ import qualified Control.Exception (assert)
 
  assertionMessage = "HUnitTestExc.lhs:13: Assertion failed\n"
  assertion = Control.Exception.assert False (return ())
 
 
-
+> main :: IO Counts
 > main = runTestTT (test [baseTests, excTests])
 
+> excTests :: Test
 > excTests = test [
 
     -- Hugs and GHC don't currently catch arithmetic exceptions.
