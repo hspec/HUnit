@@ -6,10 +6,8 @@ SRCS	= \
 	Test/HUnit.lhs  Test/HUnit/Base.lhs  Test/HUnit/Lang.lhs \
 	Test/HUnit/Terminal.lhs  Test/HUnit/Text.lhs
 
-EXCLUDE = Test/HUnit/LangExtended.lhs
-
 # Here are the main rules.
-include ../../Makefile.common
+include ../Makefile.common
 
 # Here are the dependencies.
 ${OBJDIR}/Test/HUnit/Text.$O: ${OBJDIR}/Test/HUnit/Base.$O
