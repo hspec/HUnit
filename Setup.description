@@ -1,5 +1,5 @@
 name:		HUnit
-version:	1.0
+version:	1.1
 build-Depends:	haskell-src
 license:	BSD3
 package-url:	http://hunit.sourceforge.net/
