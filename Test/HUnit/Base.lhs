@@ -18,7 +18,7 @@ HUnitBase.lhs  --  basic definitions
 > )
 > where
 
-> import Monad (unless, foldM)
+> import Control.Monad (unless, foldM)
 
 
 Assertion Definition

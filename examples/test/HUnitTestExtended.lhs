@@ -4,11 +4,11 @@ HUnitTestExc.lhs  --  test for HUnit, using Haskell language system "Exc"
 
 > import Test.HUnit
 > import HUnitTestBase
-> import qualified Exception (assert)
+> import qualified Control.Exception (assert)
 
 
  assertionMessage = "HUnitTestExc.lhs:13: Assertion failed\n"
- assertion = Exception.assert False (return ())
+ assertion = Control.Exception.assert False (return ())
 
 
 

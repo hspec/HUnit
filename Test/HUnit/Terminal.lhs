@@ -4,7 +4,7 @@
 > )
 > where
 
-> import Char (isPrint)
+> import Data.Char (isPrint)
 
 
 Simplifies the input string by interpreting '\r' and '\b' characters

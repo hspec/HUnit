@@ -4,7 +4,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 
 > import Test.HUnit
 > import Test.HUnit.Terminal (terminalAppearance)
-> import IO (IOMode(..), openFile, hClose)
+> import System.IO (IOMode(..), openFile, hClose)
 
 
 > data Report = Start State

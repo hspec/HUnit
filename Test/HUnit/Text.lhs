@@ -12,8 +12,8 @@ HUnitText.lhs  --  text-based test controller
 
 > import Test.HUnit.Base
 
-> import Monad (when)
-> import IO (Handle, stderr, hPutStr, hPutStrLn)
+> import Control.Monad (when)
+> import System.IO (Handle, stderr, hPutStr, hPutStrLn)
 
 
 As the general text-based test controller (`runTestText`) executes a
