@@ -1,6 +1,5 @@
 THISPKG	= HUnit
 SEARCH	= -package base
-EXTRA_H_FLAGS	= # +RTS -K6M -RTS
 
 SRCS	= \
 	Test/HUnit.lhs  Test/HUnit/Base.lhs  Test/HUnit/Lang.lhs \
