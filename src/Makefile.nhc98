@@ -4,7 +4,7 @@ EXTRA_H_FLAGS	= # +RTS -K6M -RTS
 
 SRCS	= \
 	Test/HUnit.lhs  Test/HUnit/Base.lhs  Test/HUnit/Lang.lhs \
-	Test/HUnit/Lang98.lhs  Test/HUnit/Terminal.lhs  Test/HUnit/Text.lhs
+	Test/HUnit/Terminal.lhs  Test/HUnit/Text.lhs
 
 EXCLUDE = Test/HUnit/LangExtended.lhs
 
@@ -13,16 +13,14 @@ include ../../Makefile.common
 
 # Here are the dependencies.
 ${OBJDIR}/Test/HUnit/Text.$O: ${OBJDIR}/Test/HUnit/Base.$O
-${OBJDIR}/Test/HUnit/Lang98.$O:
-${OBJDIR}/Test/HUnit/Lang.$O: ${OBJDIR}/Test/HUnit/Lang98.$O
+${OBJDIR}/Test/HUnit/Lang.$O:
 ${OBJDIR}/Test/HUnit/Base.$O: ${OBJDIR}/Test/HUnit/Lang.$O
 ${OBJDIR}/Test/HUnit.$O: ${OBJDIR}/Test/HUnit/Base.$O \
 			${OBJDIR}/Test/HUnit/Text.$O
 
 # C-files dependencies.
 Test/HUnit/Text.$C: Test/HUnit/Base.$C
-Test/HUnit/Lang98.$C: 
-Test/HUnit/Lang.$C: Test/HUnit/Lang98.$C
+Test/HUnit/Lang.$C: 
 Test/HUnit/Base.$C: Test/HUnit/Lang.$C
 Test/HUnit.$C: Test/HUnit/Base.$C Test/HUnit/Text.$C
 
