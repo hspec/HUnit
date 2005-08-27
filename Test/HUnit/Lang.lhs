@@ -18,7 +18,7 @@ Imports
 -------
 
 > import Data.List (isPrefixOf)
-#if defined(__GLASGOW_HASKELL) || defined(__HUGS__)
+#if defined(__GLASGOW_HASKELL__) || defined(__HUGS__)
 > import Control.Exception (try)
 #else
 > import System.IO.Error (ioeGetErrorString, try)
@@ -61,7 +61,7 @@ Implementations
 >                             case r of Right () -> return Nothing
 >                                       Left  e  -> return (Just (decode e))
 >  where
-#if defined(__GLASGOW_HASKELL) || defined(__HUGS__)
+#if defined(__GLASGOW_HASKELL__) || defined(__HUGS__)
 >   decode e = let s0 = show e
 #else
 >   decode e = let s0 = ioeGetErrorString e
