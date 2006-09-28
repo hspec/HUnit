@@ -19,6 +19,8 @@ PACKAGE_DEPS = base
 
 SRC_HC_OPTS += -cpp
 
+EXCLUDED_SRCS += Setup.hs
+
 SRC_HADDOCK_OPTS += -t "Haskell Hierarchical Libraries ($(PACKAGE) package)"
 
 # -----------------------------------------------------------------------------
