@@ -13,7 +13,7 @@ pun intended) appearance as would the input string when written to a
 terminal that overwrites character positions following carriage
 returns and backspaces.
 
-The helper function `ta` takes an accumlating `ShowS`-style function
+The helper function `ta` takes an accumulating `ShowS`-style function
 that holds "committed" lines of text, a (reversed) list of characters
 on the current line *before* the cursor, a (normal) list of characters
 on the current line *after* the cursor, and the remaining input.
