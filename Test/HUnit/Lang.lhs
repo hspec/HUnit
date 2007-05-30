@@ -19,7 +19,8 @@ Imports
 
 > import Data.List (isPrefixOf)
 #if defined(__GLASGOW_HASKELL__) || defined(__HUGS__)
-> import Control.Exception (try)
+> import Data.Dynamic
+> import Control.Exception as E         ( throwDyn, try, Exception(..) )
 #else
 > import System.IO.Error (ioeGetErrorString, try)
 #endif
@@ -49,11 +50,31 @@ result is as follows:
 Implementations
 ---------------
 
+#if defined(__GLASGOW_HASKELL__) || defined(__HUGS__)
+> data HUnitFailure = HUnitFailure String
+>
+> hunitFailureTc :: TyCon
+> hunitFailureTc = mkTyCon "HUnitFailure"
+> {-# NOINLINE hunitFailureTc #-}
+> 
+> instance Typeable HUnitFailure where
+>     typeOf _ = mkTyConApp hunitFailureTc []
+
+> assertFailure msg = E.throwDyn (HUnitFailure msg)
+
+> performTestCase action = 
+>     do r <- E.try action
+>        case r of 
+>          Right () -> return Nothing
+>          Left e@(E.DynException dyn) -> 
+>              case fromDynamic dyn of
+>                Just (HUnitFailure msg) -> return $ Just (True, msg)
+>                Nothing                 -> return $ Just (False, show e)
+>          Left e -> return $ Just (False, show e)
+#else
 > hunitPrefix = "HUnit:"
 
-> hugsPrefix  = "IO Error: User error\nReason: "
 > nhc98Prefix = "I/O error (user-defined), call to function `userError':\n  "
-> -- GHC prepends no prefix to the user-supplied string.
 
 > assertFailure msg = ioError (userError (hunitPrefix ++ msg))
 
@@ -61,14 +82,10 @@ Implementations
 >                             case r of Right () -> return Nothing
 >                                       Left  e  -> return (Just (decode e))
 >  where
-#if defined(__GLASGOW_HASKELL__) || defined(__HUGS__)
->   decode e = let s0 = show e
-#else
 >   decode e = let s0 = ioeGetErrorString e
-#endif
->                  (_, s1) = dropPrefix hugsPrefix  s0
->                  (_, s2) = dropPrefix nhc98Prefix s1
->              in            dropPrefix hunitPrefix s2
+>                  (_, s1) = dropPrefix nhc98Prefix s0
+>              in            dropPrefix hunitPrefix s1
 >   dropPrefix pref str = if pref `isPrefixOf` str
 >                           then (True, drop (length pref) str)
 >                           else (False, str)
+#endif
