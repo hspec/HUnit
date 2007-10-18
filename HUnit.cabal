@@ -10,6 +10,7 @@ synopsis:	A unit testing framework for Haskell
 description:
 	HUnit is a unit testing framework for Haskell, inspired by the
 	JUnit tool for Java, see: <http://www.junit.org>.
+build-type:     Simple
 exposed-modules:
 	Test.HUnit.Base,
 	Test.HUnit.Lang,
