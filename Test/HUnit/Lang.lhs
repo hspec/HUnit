@@ -20,7 +20,7 @@ Imports
 > import Data.List (isPrefixOf)
 #if defined(__GLASGOW_HASKELL__) || defined(__HUGS__)
 > import Data.Dynamic
-> import Control.Exception as E         ( throwDyn, try, Exception(..) )
+> import Control.Exception as E
 #else
 > import System.IO.Error (ioeGetErrorString, try)
 #endif
@@ -52,6 +52,9 @@ Implementations
 
 #if defined(__GLASGOW_HASKELL__) || defined(__HUGS__)
 > data HUnitFailure = HUnitFailure String
+>     deriving Show
+>
+> instance Exception HUnitFailure
 >
 > hunitFailureTc :: TyCon
 > hunitFailureTc = mkTyCon "HUnitFailure"
@@ -60,17 +63,14 @@ Implementations
 > instance Typeable HUnitFailure where
 >     typeOf _ = mkTyConApp hunitFailureTc []
 
-> assertFailure msg = E.throwDyn (HUnitFailure msg)
+> assertFailure msg = E.throw (HUnitFailure msg)
 
 > performTestCase action = 
->     do r <- E.try action
->        case r of 
->          Right () -> return Nothing
->          Left e@(E.DynException dyn) -> 
->              case fromDynamic dyn of
->                Just (HUnitFailure msg) -> return $ Just (True, msg)
->                Nothing                 -> return $ Just (False, show e)
->          Left e -> return $ Just (False, show e)
+>     do action
+>        return Nothing
+>      `E.catches`
+>        [E.Handler (\(HUnitFailure msg) -> return $ Just (True, msg)),
+>         E.Handler (\e -> return $ Just (False, show (e :: E.SomeException)))]
 #else
 > hunitPrefix = "HUnit:"
 

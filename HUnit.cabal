@@ -1,20 +1,23 @@
-name:		HUnit
-version:	1.2.0.0
-license:	BSD3
-license-file:	LICENSE
-author:		Dean Herington
-homepage:	http://hunit.sourceforge.net/
-category:	Testing
-build-depends:	base
-synopsis:	A unit testing framework for Haskell
+name:           HUnit
+version:        1.2.0.0
+license:        BSD3
+license-file:   LICENSE
+author:         Dean Herington
+homepage:       http://hunit.sourceforge.net/
+category:       Testing
+synopsis:       A unit testing framework for Haskell
 description:
-	HUnit is a unit testing framework for Haskell, inspired by the
-	JUnit tool for Java, see: <http://www.junit.org>.
+        HUnit is a unit testing framework for Haskell, inspired by the
+        JUnit tool for Java, see: <http://www.junit.org>.
 build-type:     Simple
-exposed-modules:
-	Test.HUnit.Base,
-	Test.HUnit.Lang,
-	Test.HUnit.Terminal,
-	Test.HUnit.Text,
-	Test.HUnit
-extensions:	CPP
+
+Library
+    build-depends: base
+    exposed-modules:
+        Test.HUnit.Base,
+        Test.HUnit.Lang,
+        Test.HUnit.Terminal,
+        Test.HUnit.Text,
+        Test.HUnit
+    extensions: CPP
+
