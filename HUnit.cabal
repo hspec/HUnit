@@ -6,6 +6,8 @@ author:         Dean Herington
 homepage:       http://hunit.sourceforge.net/
 category:       Testing
 synopsis:       A unit testing framework for Haskell
+maintainer:     libraries@haskell.org
+cabal-version:  >= 1.2
 description:
         HUnit is a unit testing framework for Haskell, inspired by the
         JUnit tool for Java, see: <http://www.junit.org>.
