@@ -54,14 +54,14 @@ Implementations
 > data HUnitFailure = HUnitFailure String
 >     deriving Show
 >
-> instance Exception HUnitFailure
->
 > hunitFailureTc :: TyCon
 > hunitFailureTc = mkTyCon "HUnitFailure"
 > {-# NOINLINE hunitFailureTc #-}
 > 
 > instance Typeable HUnitFailure where
 >     typeOf _ = mkTyConApp hunitFailureTc []
+#ifdef BASE4
+> instance Exception HUnitFailure
 
 > assertFailure msg = E.throw (HUnitFailure msg)
 
@@ -71,6 +71,19 @@ Implementations
 >      `E.catches`
 >        [E.Handler (\(HUnitFailure msg) -> return $ Just (True, msg)),
 >         E.Handler (\e -> return $ Just (False, show (e :: E.SomeException)))]
+#else
+> assertFailure msg = E.throwDyn (HUnitFailure msg)
+
+> performTestCase action =
+>     do r <- E.try action
+>        case r of
+>          Right () -> return Nothing
+>          Left e@(E.DynException dyn) ->
+>              case fromDynamic dyn of
+>                Just (HUnitFailure msg) -> return $ Just (True, msg)
+>                Nothing                 -> return $ Just (False, show e)
+>          Left e -> return $ Just (False, show e)
+#endif
 #else
 > hunitPrefix = "HUnit:"
 

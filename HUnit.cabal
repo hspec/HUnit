@@ -13,8 +13,17 @@ description:
         JUnit tool for Java, see: <http://www.junit.org>.
 build-type:     Simple
 
-Library
-    build-depends: base >=4 && <5
+flag base4
+
+library
+    build-depends: base <5
+    if flag(base4)
+      build-depends: base >=4
+      cpp-options: -DBASE4
+    else
+      build-depends: base <4
+    if impl(ghc >= 6.10)
+      build-depends: base >=4
     exposed-modules:
         Test.HUnit.Base,
         Test.HUnit.Lang,
