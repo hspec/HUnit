@@ -83,7 +83,11 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >   "null" ~: expectSuccess ok,
 
 >   "userError" ~:
+#if defined(__GLASGOW_HASKELL__)
+>     expectError "user error (error)" (TestCase (ioError (userError "error"))),
+#else
 >     expectError "error" (TestCase (ioError (userError "error"))),
+#endif
 
 >   "IO error (file missing)" ~:
 >     expectUnspecifiedError
@@ -179,15 +183,16 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 
 > suiteCounts = Counts 6 6 0 4
 
-> suiteOutput = "### Failure in: 0:0:1\n\
->               \1\n\
->               \### Failure in: 0:1:2:2:2.3\n\
->               \2\n\
->               \### Failure in: 0:2:3:4:5\n\
->               \3\n\
->               \### Failure in: 0:3:0:0:6\n\
->               \4\n\
->               \Cases: 6  Tried: 6  Errors: 0  Failures: 4\n"
+> suiteOutput = concat [
+>    "### Failure in: 0:0:1\n",
+>    "1\n",
+>    "### Failure in: 0:1:2:2:2.3\n",
+>    "2\n",
+>    "### Failure in: 0:2:3:4:5\n",
+>    "3\n",
+>    "### Failure in: 0:3:0:0:6\n",
+>    "4\n",
+>    "Cases: 6  Tried: 6  Errors: 0  Failures: 4\n"]
 
 
 > suites = [suite0, suite1, suite2, suite3]
@@ -241,7 +246,11 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 
 >   "lone error" ~:
 >     expectText (Counts 1 1 1 0)
+#if defined(__GLASGOW_HASKELL__)
+>         "### Error:\nuser error (xyz)\nCases: 1  Tried: 1  Errors: 1  Failures: 0\n"
+#else
 >         "### Error:\nxyz\nCases: 1  Tried: 1  Errors: 1  Failures: 0\n"
+#endif
 >         (test (do ioError (userError "xyz"); return ())),
 
 >   "lone failure" ~:

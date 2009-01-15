@@ -17,13 +17,13 @@ HUnitTestExc.lhs  --  test for HUnit, using Haskell language system "Exc"
 > excTests :: Test
 > excTests = test [
 
-    -- Hugs and GHC don't currently catch arithmetic exceptions.
-   "div by 0" ~:
-     expectUnspecifiedError (TestCase ((3 `div` 0) `seq` return ())),
+    -- Hugs doesn't currently catch arithmetic exceptions.
+    
+>  "div by 0" ~:
+>    expectUnspecifiedError (TestCase ((3 `div` 0) `seq` return ())),
 
-    -- GHC doesn't currently catch array-related exceptions.
-   "array ref out of bounds" ~:
-     expectUnspecifiedError (TestCase (... `seq` return ())),
+>  "list ref out of bounds" ~:
+>    expectUnspecifiedError (TestCase ([1 .. 4] !! 10 `seq` return ())),
 
 >   "error" ~:
 >     expectError "error" (TestCase (error "error")),
@@ -31,7 +31,8 @@ HUnitTestExc.lhs  --  test for HUnit, using Haskell language system "Exc"
 >   "tail []" ~:
 >     expectUnspecifiedError (TestCase (tail [] `seq` return ()))
 
-   -- Hugs doesn't provide `assert`.
+   -- Hugs doesn't provide `assert` and GHC's type system doesn't allow this
+   -- to compile.
    "assert" ~:
      expectError assertionMessage (TestCase assertion)
 

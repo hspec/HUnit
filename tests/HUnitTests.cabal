@@ -1,0 +1,28 @@
+Name:                   HUnitTests
+Version:                1.2.2.0
+License:                BSD3
+License-File:           LICENSE
+Author:                 Dean Herington
+Homepage:               http://hunit.sourceforge.net/
+Category:               Testing
+Synopsis:               A set of unit tests for HUnit
+-- Build-Type:             Simple
+
+Executable:             basic-tests
+Main-Is:                HUnitTest98.lhs
+HS-Source-Dirs:         . ..
+-- Build-Depends:          base
+Extensions:             CPP
+
+Executable:             extended-tests
+Main-Is:                HUnitTestExtended.lhs
+HS-Source-Dirs:         . ..
+-- Build-Depends:          base
+Extensions:             CPP
+
+Executable:             terminal-tests
+Main-Is:                TerminalTest.lhs
+HS-Source-Dirs:         . ..
+-- Build-Depends:          base
+Extensions:             CPP
+    

@@ -1,4 +1,7 @@
 -- Example.hs  --  Examples from HUnit user's guide
+--
+-- For more examples, check out the tests directory.  It contains unit tests
+-- for HUnit. 
 
 module Main where
 

@@ -1,34 +1,87 @@
-name:           HUnit
-version:        1.2.0.3
-license:        BSD3
-license-file:   LICENSE
-author:         Dean Herington
-homepage:       http://hunit.sourceforge.net/
-category:       Testing
-synopsis:       A unit testing framework for Haskell
-maintainer:     libraries@haskell.org
-cabal-version:  >= 1.2
-description:
-        HUnit is a unit testing framework for Haskell, inspired by the
-        JUnit tool for Java, see: <http://www.junit.org>.
-build-type:     Simple
+Name:                   HUnit
+Version:                1.2.0.4
+Cabal-Version:          >= 1.2
+License:                BSD3
+License-File:           LICENSE
+Author:                 Dean Herington
+Maintainer:             libraries@haskell.org
+Stability:              stable
+Homepage:               http://hunit.sourceforge.net/
+Category:               Testing
+Synopsis:               A unit testing framework for Haskell
+Description:
+    HUnit is a unit testing framework for Haskell, inspired by the
+    JUnit tool for Java, see: <http://www.junit.org>.
+Tested-With:
+    GHC == 6.10.1
+Build-Type:             Custom
+Extra-Source-Files:
+    tests/HUnitTest98.lhs
+    tests/HUnitTestBase.lhs
+    tests/HUnitTestExtended.lhs
+    tests/HUnitTests.cabal
+    tests/Setup.hs
+    tests/TerminalTest.lhs
+Data-Files:
+    doc/Guide.html
+    examples/Example.hs
+    prologue.txt
+    README
 
 flag base4
 
-library
-    build-depends: base <5
+Library
+    Build-Depends: base <5
     if flag(base4)
-      build-depends: base >=4
-      cpp-options: -DBASE4
+        Build-Depends: base >=4
+        CPP-Options: -DBASE4
     else
-      build-depends: base <4
+        Build-Depends: base <4
     if impl(ghc >= 6.10)
-      build-depends: base >=4
-    exposed-modules:
-        Test.HUnit.Base,
-        Test.HUnit.Lang,
-        Test.HUnit.Terminal,
-        Test.HUnit.Text,
-        Test.HUnit
-    extensions: CPP
+        Build-Depends: base >=4
+        Exposed-Modules:
+            Test.HUnit.Base,
+            Test.HUnit.Lang,
+            Test.HUnit.Terminal,
+            Test.HUnit.Text,
+            Test.HUnit
+        Extensions: CPP
 
+Executable basic-tests
+    Main-Is:            HUnitTest98.lhs
+    HS-Source-Dirs:     . tests
+    Build-Depends:      base<5
+    if flag(base4)
+        Build-Depends: base >=4
+        CPP-Options: -DBASE4
+    else
+        Build-Depends: base <4
+    if impl(ghc >= 6.10)
+        Build-Depends: base >=4
+        Extensions: CPP
+
+Executable extended-tests
+    Main-Is:            HUnitTestExtended.lhs
+    HS-Source-Dirs:     . tests
+    Build-Depends:      base<5
+    if flag(base4)
+        Build-Depends: base >=4
+        CPP-Options: -DBASE4
+    else
+        Build-Depends: base <4
+    if impl(ghc >= 6.10)
+        Build-Depends: base >=4
+        Extensions: CPP
+
+Executable terminal-tests
+    Main-Is:            TerminalTest.lhs
+    HS-Source-Dirs:     . tests
+    Build-Depends:      base<5
+    if flag(base4)
+        Build-Depends: base >=4
+        CPP-Options: -DBASE4
+    else
+        Build-Depends: base <4
+    if impl(ghc >= 6.10)
+        Build-Depends: base >=4
+        Extensions: CPP
