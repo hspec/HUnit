@@ -4,6 +4,7 @@ module Main (main) where
 import Data.List (isSuffixOf)
 import Distribution.PackageDescription
 import Distribution.Simple
+import System.FilePath
 import System.Process
 
 main :: IO ()
@@ -11,7 +12,7 @@ main = defaultMainWithHooks (simpleUserHooks {runTests = _runTests, instHook = _
     where
         -- Run all executables with names that end in -tests
         _runTests _ _ pd _ = do
-            let exeNames = ["dist/build/" ++ fp ++ "/" ++ fp | fp <- map exeName (executables pd)]
+            let exeNames = ["dist" </> "build" </> fp </> fp | fp <- map exeName (executables pd)]
             sequence [_runTest e | e <- exeNames, isSuffixOf "-tests" e]
             return ()
         _runTest fp = do
