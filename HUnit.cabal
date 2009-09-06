@@ -1,10 +1,10 @@
 Name:                   HUnit
-Version:                1.2.0.4
+Version:                1.2.2.0
 Cabal-Version:          >= 1.2
 License:                BSD3
 License-File:           LICENSE
 Author:                 Dean Herington
-Maintainer:             libraries@haskell.org
+Maintainer:             hunit@richardg.name
 Stability:              stable
 Homepage:               http://hunit.sourceforge.net/
 Category:               Testing
@@ -13,7 +13,7 @@ Description:
     HUnit is a unit testing framework for Haskell, inspired by the
     JUnit tool for Java, see: <http://www.junit.org>.
 Tested-With:
-    GHC == 6.10.1
+    GHC == 6.10.4
 Build-Type:             Custom
 Extra-Source-Files:
     tests/HUnitTest98.lhs
