@@ -1,5 +1,5 @@
 Name:                   HUnit
-Version:                1.2.2.0
+Version:                1.2.2.1
 Cabal-Version:          >= 1.2
 License:                BSD3
 License-File:           LICENSE
@@ -39,13 +39,13 @@ Library
         Build-Depends: base <4
     if impl(ghc >= 6.10)
         Build-Depends: base >=4
-        Exposed-Modules:
-            Test.HUnit.Base,
-            Test.HUnit.Lang,
-            Test.HUnit.Terminal,
-            Test.HUnit.Text,
-            Test.HUnit
-        Extensions: CPP
+    Exposed-Modules:
+        Test.HUnit.Base,
+        Test.HUnit.Lang,
+        Test.HUnit.Terminal,
+        Test.HUnit.Text,
+        Test.HUnit
+    Extensions: CPP
 
 Executable basic-tests
     Main-Is:            HUnitTest98.lhs
