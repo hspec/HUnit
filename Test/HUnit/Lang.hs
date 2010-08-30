@@ -18,11 +18,11 @@ where
 -- Imports
 -- -------
 
-import Data.List (isPrefixOf)
 #if defined(__GLASGOW_HASKELL__) || defined(__HUGS__)
 import Data.Dynamic
 import Control.Exception as E
 #else
+import Data.List (isPrefixOf)
 import System.IO.Error (ioeGetErrorString, try)
 #endif
 
