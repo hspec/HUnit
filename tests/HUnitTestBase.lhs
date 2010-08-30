@@ -16,21 +16,21 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 > instance Eq Report where
 >   Start s1            == Start s2             =  s1 == s2
 >   Error m1 s1         == Error m2 s2          =  m1 == m2 && s1 == s2
->   Error m1 s1         == UnspecifiedError s2  =  s1 == s2
->   UnspecifiedError s1 == Error m2 s2          =  s1 == s2
+>   Error _  s1         == UnspecifiedError s2  =  s1 == s2
+>   UnspecifiedError s1 == Error _  s2          =  s1 == s2
 >   UnspecifiedError s1 == UnspecifiedError s2  =  s1 == s2
 >   Failure m1 s1       == Failure m2 s2        =  m1 == m2 && s1 == s2
 >   _                   == _                    =  False
 
 
 > expectReports :: [Report] -> Counts -> Test -> Test
-> expectReports reports counts test = TestCase $ do
->   (counts', reports') <- performTest (\  ss us -> return (Start     ss : us))
+> expectReports reports1 counts1 t = TestCase $ do
+>   (counts2, reports2) <- performTest (\  ss us -> return (Start     ss : us))
 >                                      (\m ss us -> return (Error   m ss : us))
 >                                      (\m ss us -> return (Failure m ss : us))
->                                      [] test
->   assertEqual "for the reports from a test," reports (reverse reports')
->   assertEqual "for the counts from a test," counts counts'
+>                                      [] t
+>   assertEqual "for the reports from a test," reports1 (reverse reports2)
+>   assertEqual "for the counts from a test," counts1 counts2
 
 
 > simpleStart = Start (State [] (Counts 1 0 0 0))
@@ -40,24 +40,24 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 
 > expectProblem :: (String -> State -> Report) -> Int -> String -> Test -> Test
 > expectProblem kind err msg =
->   expectReports [simpleStart, kind msg (State [] counts)] counts
->  where counts = Counts 1 1 err (1-err)
+>   expectReports [simpleStart, kind msg (State [] counts')] counts'
+>  where counts' = Counts 1 1 err (1-err)
 
 > expectError, expectFailure :: String -> Test -> Test
 > expectError   = expectProblem Error   1
 > expectFailure = expectProblem Failure 0
 
 > expectUnspecifiedError :: Test -> Test
-> expectUnspecifiedError = expectProblem (\ msg st -> UnspecifiedError st) 1 undefined
+> expectUnspecifiedError = expectProblem (\ _msg st -> UnspecifiedError st) 1 undefined
 
 
 > data Expect = Succ | Err String | UErr | Fail String
 
 > expect :: Expect -> Test -> Test
-> expect Succ     test = expectSuccess test
-> expect (Err m)  test = expectError m test
-> expect UErr     test = expectUnspecifiedError test
-> expect (Fail m) test = expectFailure m test
+> expect Succ     t = expectSuccess t
+> expect (Err m)  t = expectError m t
+> expect UErr     t = expectUnspecifiedError t
+> expect (Fail m) t = expectFailure m t
 
 
 
@@ -113,10 +113,10 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >     let msg = "assertString nonnull"
 >     in expectFailure msg (TestCase (assertString msg)),
 
->   let exp v non =
+>   let f v non =
 >         show v ++ " with " ++ non ++ "null message" ~:
 >           expect (if v then Succ else Fail non) $ test $ assertBool non v
->   in "assertBool" ~: [ exp v non | v <- [True, False], non <- ["non", ""] ],
+>   in "assertBool" ~: [ f v non | v <- [True, False], non <- ["non", ""] ],
 
 >   let msg = "assertBool True"
 >   in msg ~: expectSuccess (test (assertBool msg True)),
@@ -143,7 +143,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 > emptyTest2 = TestList [ emptyTest0, emptyTest1, emptyTest0 ]
 > emptyTests = [emptyTest0, emptyTest1, emptyTest2]
 
-> testCountEmpty test = TestCase (assertEqual "" 0 (testCaseCount test))
+> testCountEmpty t = TestCase (assertEqual "" 0 (testCaseCount t))
 
 > suite0 = (0, ok)
 > suite1 = (1, TestList [])
@@ -198,9 +198,9 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 > suites = [suite0, suite1, suite2, suite3]
 
 
-> testCount (num, test) count =
+> testCount (num, t) count =
 >   "testCaseCount suite" ++ show num ~:
->     TestCase $ assertEqual "for test count," count (testCaseCount test)
+>     TestCase $ assertEqual "for test count," count (testCaseCount t)
 
 > testCaseCountTests = TestList [
 
@@ -214,12 +214,12 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >  ]
 
 
-> testPaths (num, test) paths =
+> testPaths (num, t) paths =
 >   "testCasePaths suite" ++ show num ~:
 >     TestCase $ assertEqual "for test paths,"
->                             (map reverse paths) (testCasePaths test)
+>                             (map reverse paths) (testCasePaths t)
 
-> testPathsEmpty test = TestCase $ assertEqual "" [] (testCasePaths test)
+> testPathsEmpty t = TestCase $ assertEqual "" [] (testCasePaths t)
 
 > testCasePathsTests = TestList [
 
@@ -236,10 +236,10 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 > reportTests = "reports" ~: expectReports suiteReports suiteCounts suite
 
 
-> expectText counts text test = TestCase $ do
->   (counts', text') <- runTestText putTextToShowS test
->   assertEqual "for the final counts," counts counts'
->   assertEqual "for the failure text output," text (text' "")
+> expectText counts1 text1 t = TestCase $ do
+>   (counts2, text2) <- runTestText putTextToShowS t
+>   assertEqual "for the final counts," counts1 counts2
+>   assertEqual "for the failure text output," text1 (text2 "")
 
 
 > textTests = test [
@@ -267,9 +267,9 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >     in map test
 >       [ "show progress = " ++ show flag ~: do
 >           handle <- openFile filename WriteMode
->           (counts, _) <- runTestText (putTextToHandle handle flag) suite
+>           (counts', _) <- runTestText (putTextToHandle handle flag) suite
 >           hClose handle
->           assertEqual "for the final counts," suiteCounts counts
+>           assertEqual "for the final counts," suiteCounts counts'
 >           text <- readFile filename
 >           let text' = if flag then trim (terminalAppearance text) else text
 >           assertEqual "for the failure text output," suiteOutput text'
@@ -322,10 +322,10 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >         (    "IO ", assertionPredicate   (l x) ,   l x  @? m,   l x  ~? m ),
 >         ( "IO IO ", assertionPredicate (l(l x)), l(l x) @? m, l(l x) ~? m )]
 >       l x = lift x
->       predicabled l e m x =
->         test [ test [ "pred" ~: pre ++ l ~: m ~: expect e $ test $ tst p,
->                       "(@?)" ~: pre ++ l ~: m ~: expect e $ test $ a,
->                       "(~?)" ~: pre ++ l ~: m ~: expect e $ t ]
+>       predicabled lab e m x =
+>         test [ test [ "pred" ~: pre ++ lab ~: m ~: expect e $ test $ tst p,
+>                       "(@?)" ~: pre ++ lab ~: m ~: expect e $ test $ a,
+>                       "(~?)" ~: pre ++ lab ~: m ~: expect e $ t ]
 >                                    | (pre, p, a, t) <- predicables x m ]
 >        where tst p = p >>= assertBool m
 >   in "predicable" ~: [
@@ -338,17 +338,19 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 
 > compareTests = test [
 
->   let succ = const Succ
->       compare f exp act = test [ "(@=?)" ~: expect e $ test (exp @=? act),
->                                  "(@?=)" ~: expect e $ test (act @?= exp),
->                                  "(~=?)" ~: expect e $       exp ~=? act,
->                                  "(~?=)" ~: expect e $       act ~?= exp ]
->        where e = f $ "expected: " ++ show exp ++ "\n but got: " ++ show act
+>   let succ' = const Succ
+>       compare' f expected actual
+>           = test [ "(@=?)" ~: expect e $ test (expected @=? actual),
+>                    "(@?=)" ~: expect e $ test (actual   @?= expected),
+>                    "(~=?)" ~: expect e $       expected ~=? actual,
+>                    "(~?=)" ~: expect e $       actual   ~?= expected ]
+>        where e = f $ "expected: " ++ show expected ++
+>                      "\n but got: " ++ show actual
 >   in test [
->     compare succ 1 1,
->     compare Fail 1 2,
->     compare succ (1,'b',3.0) (1,'b',3.0),
->     compare Fail (1,'b',3.0) (1,'b',3.1)
+>     compare' succ' 1 1,
+>     compare' Fail 1 2,
+>     compare' succ' (1,'b',3.0) (1,'b',3.0),
+>     compare' Fail (1,'b',3.0) (1,'b',3.1)
 >    ]
 
 >  ]
@@ -361,14 +363,14 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >                                 (Counts c c 0 0)
 
 > expectList2 :: [Int] -> Test -> Test
-> expectList2 cs test =
+> expectList2 cs t =
 >   expectReports
 >     [ Start (State [ListItem j, ListItem i] (Counts c n 0 0))
 >         | ((i,j),n) <- zip coords [0..] ]
 >                                             (Counts c c 0 0)
->                    test
+>                    t
 >  where coords = [ (i,j) | i <- [0 .. length cs - 1], j <- [0 .. cs!!i - 1] ]
->        c = testCaseCount test
+>        c = testCaseCount t
 
 
 > extendedTestTests = test [
