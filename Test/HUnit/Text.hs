@@ -58,7 +58,7 @@ putTextToHandle handle showProgress = PutText put initCnt
   initCnt = if showProgress then 0 else -1
   put line pers (-1) = do when pers (hPutStrLn handle line); return (-1)
   put line True  cnt = do hPutStrLn handle (erase cnt ++ line); return 0
-  put line False cnt = do hPutStr handle ('\r' : line); return (length line)
+  put line False _   = do hPutStr handle ('\r' : line); return (length line)
     -- The "erasing" strategy with a single '\r' relies on the fact that the
     -- lengths of successive summary lines are monotonically nondecreasing.
   erase cnt = if cnt == 0 then "" else "\r" ++ replicate cnt ' ' ++ "\r"
@@ -72,7 +72,7 @@ putTextToHandle handle showProgress = PutText put initCnt
 putTextToShowS :: PutText ShowS
 putTextToShowS = PutText put id
  where put line pers f = return (if pers then acc f line else f)
-       acc f line tail = f (line ++ '\n' : tail)
+       acc f line rest = f (line ++ '\n' : rest)
 
 
 -- | Executes a test, processing each report line according to the given 
@@ -81,10 +81,10 @@ putTextToShowS = PutText put id
 --   count values.
 
 runTestText :: PutText st -> Test -> IO (Counts, st)
-runTestText (PutText put us) t = do
-  (counts, us') <- performTest reportStart reportError reportFailure us t
-  us'' <- put (showCounts counts) True us'
-  return (counts, us'')
+runTestText (PutText put us0) t = do
+  (counts', us1) <- performTest reportStart reportError reportFailure us0 t
+  us2 <- put (showCounts counts') True us1
+  return (counts', us2)
  where
   reportStart ss us = put (showCounts (counts ss)) False us
   reportError   = reportProblem "Error:"   "Error in:   "
@@ -98,10 +98,10 @@ runTestText (PutText put us) t = do
 -- | Converts test execution counts to a string.
 
 showCounts :: Counts -> String
-showCounts Counts{ cases = cases, tried = tried,
-                   errors = errors, failures = failures } =
-  "Cases: " ++ show cases ++ "  Tried: " ++ show tried ++
-  "  Errors: " ++ show errors ++ "  Failures: " ++ show failures
+showCounts Counts{ cases = cases', tried = tried',
+                   errors = errors', failures = failures' } =
+  "Cases: " ++ show cases' ++ "  Tried: " ++ show tried' ++
+  "  Errors: " ++ show errors' ++ "  Failures: " ++ show failures'
 
 
 -- | Converts a test case path to a string, separating adjacent elements by 
@@ -124,5 +124,5 @@ showPath nodes = foldl1 f (map showNode nodes)
 --   The \"TT\" in the name suggests \"Text-based reporting to the Terminal\".
 
 runTestTT :: Test -> IO Counts
-runTestTT t = do (counts, 0) <- runTestText (putTextToHandle stderr True) t
-                 return counts
+runTestTT t = do (counts', 0) <- runTestText (putTextToHandle stderr True) t
+                 return counts'
