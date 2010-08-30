@@ -33,6 +33,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >   assertEqual "for the counts from a test," counts1 counts2
 
 
+> simpleStart :: Report
 > simpleStart = Start (State [] (Counts 1 0 0 0))
 
 > expectSuccess :: Test -> Test
@@ -61,6 +62,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 
 
 
+> baseTests :: Test
 > baseTests = test [ assertTests,
 >                    testCaseCountTests,
 >                    testCasePathsTests,
@@ -74,10 +76,13 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >                    extendedTestTests ]
 
 
+> ok :: Test
 > ok = test (assert ())
+> bad :: String -> Test
 > bad m = test (assertFailure m)
 
 
+> assertTests :: Test
 > assertTests = test [
 
 >   "null" ~: expectSuccess ok,
@@ -125,31 +130,36 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >   in msg ~: expectFailure msg (test (assertBool msg False)),
 
 >   "assertEqual equal" ~:
->     expectSuccess (test (assertEqual "" 3 3)),
+>     expectSuccess (test (assertEqual "" (3 :: Integer) (3 :: Integer))),
 
 >   "assertEqual unequal no msg" ~:
 >     expectFailure "expected: 3\n but got: 4"
->       (test (assertEqual "" 3 4)),
+>       (test (assertEqual "" (3 :: Integer) (4 :: Integer))),
 
 >   "assertEqual unequal with msg" ~:
 >     expectFailure "for x,\nexpected: 3\n but got: 4"
->       (test (assertEqual "for x," 3 4))
+>       (test (assertEqual "for x," (3 :: Integer) (4 :: Integer)))
 
 >  ]
 
 
+> emptyTest0, emptyTest1, emptyTest2 :: Test
 > emptyTest0 = TestList []
 > emptyTest1 = TestLabel "empty" emptyTest0
 > emptyTest2 = TestList [ emptyTest0, emptyTest1, emptyTest0 ]
+> emptyTests :: [Test]
 > emptyTests = [emptyTest0, emptyTest1, emptyTest2]
 
+> testCountEmpty :: Test -> Test
 > testCountEmpty t = TestCase (assertEqual "" 0 (testCaseCount t))
 
+> suite0, suite1, suite2, suite3 :: (Integer, Test)
 > suite0 = (0, ok)
 > suite1 = (1, TestList [])
 > suite2 = (2, TestLabel "3" ok)
 > suite3 = (3, suite)
 
+> suite :: Test
 > suite =
 >   TestLabel "0"
 >     (TestList [ TestLabel "1" (bad "1"),
@@ -159,8 +169,10 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >                 TestLabel "3" (TestLabel "4" (TestLabel "5" (bad "3"))),
 >                 TestList [ TestList [ TestLabel "6" (bad "4") ] ] ])
 
-> suiteCount = (6 :: Int)
+> suiteCount :: Int
+> suiteCount = 6
 
+> suitePaths :: [[Node]]
 > suitePaths = [
 >   [Label "0", ListItem 0, Label "1"],
 >   [Label "0", ListItem 1, Label "2", ListItem 0, Label "2.1"],
@@ -169,6 +181,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >   [Label "0", ListItem 2, Label "3", Label "4", Label "5"],
 >   [Label "0", ListItem 3, ListItem 0, ListItem 0, Label "6"]]
 
+> suiteReports :: [Report]
 > suiteReports = [ Start       (State (p 0) (Counts 6 0 0 0)),
 >                  Failure "1" (State (p 0) (Counts 6 1 0 1)),
 >                  Start       (State (p 1) (Counts 6 1 0 1)),
@@ -181,8 +194,10 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >                  Failure "4" (State (p 5) (Counts 6 6 0 4))]
 >  where p n = reverse (suitePaths !! n)
 
+> suiteCounts :: Counts
 > suiteCounts = Counts 6 6 0 4
 
+> suiteOutput :: String
 > suiteOutput = concat [
 >    "### Failure in: 0:0:1\n",
 >    "1\n",
@@ -195,13 +210,16 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >    "Cases: 6  Tried: 6  Errors: 0  Failures: 4\n"]
 
 
+> suites :: [(Integer, Test)]
 > suites = [suite0, suite1, suite2, suite3]
 
 
+> testCount :: Show n => (n, Test) -> Int -> Test
 > testCount (num, t) count =
 >   "testCaseCount suite" ++ show num ~:
 >     TestCase $ assertEqual "for test count," count (testCaseCount t)
 
+> testCaseCountTests :: Test
 > testCaseCountTests = TestList [
 
 >   "testCaseCount empty" ~: test (map testCountEmpty emptyTests),
@@ -214,13 +232,16 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >  ]
 
 
+> testPaths :: Show n => (n, Test) -> [[Node]] -> Test
 > testPaths (num, t) paths =
 >   "testCasePaths suite" ++ show num ~:
 >     TestCase $ assertEqual "for test paths,"
 >                             (map reverse paths) (testCasePaths t)
 
+> testPathsEmpty :: Test -> Test
 > testPathsEmpty t = TestCase $ assertEqual "" [] (testCasePaths t)
 
+> testCasePathsTests :: Test
 > testCasePathsTests = TestList [
 
 >   "testCasePaths empty" ~: test (map testPathsEmpty emptyTests),
@@ -233,15 +254,18 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >  ]
 
 
+> reportTests :: Test
 > reportTests = "reports" ~: expectReports suiteReports suiteCounts suite
 
 
+> expectText :: Counts -> String -> Test -> Test
 > expectText counts1 text1 t = TestCase $ do
 >   (counts2, text2) <- runTestText putTextToShowS t
 >   assertEqual "for the final counts," counts1 counts2
 >   assertEqual "for the failure text output," text1 (text2 "")
 
 
+> textTests :: Test
 > textTests = test [
 
 >   "lone error" ~:
@@ -278,6 +302,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >  ]
 
 
+> showPathTests :: Test
 > showPathTests = "showPath" ~: [
 
 >   "empty"  ~: showPath [] ~?= "",
@@ -289,6 +314,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >  ]
 
 
+> showCountsTests :: Test
 > showCountsTests = "showCounts" ~: showCounts (Counts 4 3 2 1) ~?=
 >                             "Cases: 4  Tried: 3  Errors: 2  Failures: 1"
 
@@ -298,6 +324,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 > lift a = return a
 
 
+> assertableTests :: Test
 > assertableTests =
 >   let assertables x = [
 >         (       "", assert             x  , test             (lift x))  ,
@@ -316,6 +343,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >    ]
 
 
+> predicableTests :: Test
 > predicableTests =
 >   let predicables x m = [
 >         (       "", assertionPredicate      x  ,     x  @? m,     x  ~? m ),
@@ -336,6 +364,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >    ]
 
 
+> compareTests :: Test
 > compareTests = test [
 
 >   let succ' = const Succ
@@ -380,6 +409,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >        c = testCaseCount t
 
 
+> extendedTestTests :: Test
 > extendedTestTests = test [
 
 >   "test idempotent" ~: expect Succ $ test $ test $ test $ ok,
