@@ -28,6 +28,10 @@ Data-Files:
     prologue.txt
     README
 
+source-repository head
+    type:     darcs
+    location: http://code.haskell.org/HUnit/
+
 flag base4
 
 Library
