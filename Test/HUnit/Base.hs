@@ -192,8 +192,8 @@ data Test
     | TestLabel String Test
 
 instance Show Test where
-  showsPrec p (TestCase _)    = showString "TestCase _"
-  showsPrec p (TestList ts)   = showString "TestList " . showList ts
+  showsPrec _ (TestCase _)    = showString "TestCase _"
+  showsPrec _ (TestList ts)   = showString "TestList " . showList ts
   showsPrec p (TestLabel l t) = showString "TestLabel " . showString l
                                 . showChar ' ' . showsPrec p t
 
@@ -290,7 +290,7 @@ data Node  = ListItem Int | Label String
 
 -- | Determines the paths for all 'TestCase's in a tree of @Test@s.
 testCasePaths :: Test -> [Path]
-testCasePaths t = tcp t []
+testCasePaths t0 = tcp t0 []
  where tcp (TestCase _) p = [p]
        tcp (TestList ts) p =
          concat [ tcp t (ListItem n : p) | (t,n) <- zip ts [0..] ]
