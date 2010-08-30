@@ -161,7 +161,7 @@ infix  1 @?, @=?, @?=
 (@?) :: (AssertionPredicable t) => t          -- ^ A value of which the asserted condition is predicated
                                 -> String     -- ^ A message that is displayed if the assertion fails
                                 -> Assertion
-pred @? msg = assertionPredicate pred >>= assertBool msg
+predi @? msg = assertionPredicate predi >>= assertBool msg
 
 -- | Asserts that the specified actual value is equal to the expected value
 --   (with the expected value on the left-hand side).
@@ -225,7 +225,7 @@ infixr 0 ~:
 (~?) :: (AssertionPredicable t) => t       -- ^ A value of which the asserted condition is predicated
                                 -> String  -- ^ A message that is displayed on test failure
                                 -> Test
-pred ~? msg = TestCase (pred @? msg)
+predi ~? msg = TestCase (predi @? msg)
 
 -- | Shorthand for a test case that asserts equality (with the expected 
 --   value on the left-hand side, and the actual value on the right-hand
