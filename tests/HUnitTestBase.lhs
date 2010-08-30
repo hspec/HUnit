@@ -339,6 +339,13 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 > compareTests = test [
 
 >   let succ' = const Succ
+>       compare1 :: (String -> Expect) -> Integer -> Integer -> Test
+>       compare1 = compare'
+>       compare2 :: (String -> Expect)
+>                -> (Integer, Char, Double)
+>                -> (Integer, Char, Double)
+>                -> Test
+>       compare2 = compare'
 >       compare' f expected actual
 >           = test [ "(@=?)" ~: expect e $ test (expected @=? actual),
 >                    "(@?=)" ~: expect e $ test (actual   @?= expected),
@@ -347,10 +354,10 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >        where e = f $ "expected: " ++ show expected ++
 >                      "\n but got: " ++ show actual
 >   in test [
->     compare' succ' 1 1,
->     compare' Fail 1 2,
->     compare' succ' (1,'b',3.0) (1,'b',3.0),
->     compare' Fail (1,'b',3.0) (1,'b',3.1)
+>     compare1 succ' 1 1,
+>     compare1 Fail 1 2,
+>     compare2 succ' (1,'b',3.0) (1,'b',3.0),
+>     compare2 Fail (1,'b',3.0) (1,'b',3.1)
 >    ]
 
 >  ]
