@@ -96,7 +96,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 
 >   "IO error (file missing)" ~:
 >     expectUnspecifiedError
->       (test (do openFile "3g9djs" ReadMode; return ())),
+>       (test (do _ <- openFile "3g9djs" ReadMode; return ())),
 
    "error" ~:
      expectError "error" (TestCase (error "error")),
@@ -275,7 +275,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 #else
 >         "### Error:\nxyz\nCases: 1  Tried: 1  Errors: 1  Failures: 0\n"
 #endif
->         (test (do ioError (userError "xyz"); return ())),
+>         (test (do _ <- ioError (userError "xyz"); return ())),
 
 >   "lone failure" ~:
 >     expectText (Counts 1 1 0 1)
