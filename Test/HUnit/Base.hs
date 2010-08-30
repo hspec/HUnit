@@ -322,13 +322,13 @@ performTest :: ReportStart us   -- ^ report generator for the test run start
             -> us 
             -> Test             -- ^ the test to be executed 
             -> IO (Counts, us)
-performTest reportStart reportError reportFailure us t = do
-  (ss', us') <- pt initState us t
+performTest reportStart reportError reportFailure initialUs initialT = do
+  (ss', us') <- pt initState initialUs initialT
   unless (null (path ss')) $ error "performTest: Final path is nonnull"
   return (counts ss', us')
  where
   initState  = State{ path = [], counts = initCounts }
-  initCounts = Counts{ cases = testCaseCount t, tried = 0,
+  initCounts = Counts{ cases = testCaseCount initialT, tried = 0,
                        errors = 0, failures = 0}
 
   pt ss us (TestCase a) = do
@@ -339,13 +339,13 @@ performTest reportStart reportError reportFailure us t = do
                                     return (ssF, usF)
               Just (False, m) -> do usE <- reportError   m ssE us'
                                     return (ssE, usE)
-   where c@Counts{ tried = t } = counts ss
-         ss' = ss{ counts = c{ tried = t + 1 } }
-         ssF = ss{ counts = c{ tried = t + 1, failures = failures c + 1 } }
-         ssE = ss{ counts = c{ tried = t + 1, errors   = errors   c + 1 } }
+   where c@Counts{ tried = n } = counts ss
+         ss' = ss{ counts = c{ tried = n + 1 } }
+         ssF = ss{ counts = c{ tried = n + 1, failures = failures c + 1 } }
+         ssE = ss{ counts = c{ tried = n + 1, errors   = errors   c + 1 } }
 
   pt ss us (TestList ts) = foldM f (ss, us) (zip ts [0..])
-   where f (ss, us) (t, n) = withNode (ListItem n) ss us t
+   where f (ss', us') (t, n) = withNode (ListItem n) ss' us' t
 
   pt ss us (TestLabel label t) = withNode (Label label) ss us t
 
