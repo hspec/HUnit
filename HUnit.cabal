@@ -1,6 +1,6 @@
 Name:                   HUnit
 Version:                1.2.2.2
-Cabal-Version:          >= 1.2
+Cabal-Version:          >= 1.6
 License:                BSD3
 License-File:           LICENSE
 Author:                 Dean Herington
