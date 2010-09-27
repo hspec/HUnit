@@ -39,6 +39,7 @@ Library
     if flag(base4)
         Build-Depends: base >=4
         CPP-Options: -DBASE4
+        GHC-Options: -Wall
     else
         Build-Depends: base <4
     if impl(ghc >= 6.10)
@@ -58,6 +59,7 @@ Executable basic-tests
     if flag(base4)
         Build-Depends: base >=4
         CPP-Options: -DBASE4
+        GHC-Options: -Wall
     else
         Build-Depends: base <4
     if impl(ghc >= 6.10)
@@ -71,6 +73,7 @@ Executable extended-tests
     if flag(base4)
         Build-Depends: base >=4
         CPP-Options: -DBASE4
+        GHC-Options: -Wall
     else
         Build-Depends: base <4
     if impl(ghc >= 6.10)
