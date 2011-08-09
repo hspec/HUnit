@@ -1,0 +1,5 @@
+CTRL-C doesn't exit tests running under GHCi
+This is known to affect GHC 6.12.3 on Mac OS X,
+Windows, and Linux (all platforms that were
+tested).  It also likely affects other versions
+of GHC 6.12.
