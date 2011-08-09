@@ -78,7 +78,7 @@ instance Typeable HUnitFailure where
 #ifdef BASE4
 instance Exception HUnitFailure
 
-assertFailure msg = E.throw (HUnitFailure msg)
+assertFailure msg = E.throwIO (HUnitFailure msg)
 
 performTestCase action = 
     do action
