@@ -25,4 +25,24 @@ Main-Is:                TerminalTest.lhs
 HS-Source-Dirs:         . ..
 -- Build-Depends:          base
 Extensions:             CPP
-    
+
+Executable:             optimize-tests-O0
+Main-Is:                HUnitTestOptimize.hs
+HS-Source-Dirs:         . ..
+-- Build-Depends:          base
+Extensions:             CPP
+GHC-Options:            -O0
+
+Executable:             optimize-tests-O1
+Main-Is:                HUnitTestOptimize.hs
+HS-Source-Dirs:         . ..
+-- Build-Depends:          base
+Extensions:             CPP
+GHC-Options:            -O1
+
+Executable:             optimize-tests-O2
+Main-Is:                HUnitTestOptimize.hs
+HS-Source-Dirs:         . ..
+-- Build-Depends:          base
+Extensions:             CPP
+GHC-Options:            -O2

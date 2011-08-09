@@ -1,5 +1,5 @@
 Name:                   HUnit
-Version:                1.2.2.3
+Version:                1.2.2.4
 Cabal-Version:          >= 1.6
 License:                BSD3
 License-File:           LICENSE
@@ -92,3 +92,49 @@ Executable terminal-tests
     if impl(ghc >= 6.10)
         Build-Depends: base >=4
         Extensions: CPP
+
+Executable optimize-0-tests
+    Main-Is:            HUnitTestOptimize.hs
+    HS-Source-Dirs:     . tests
+    Build-Depends:      base<5
+    GHC-Options:        -O0
+    if flag(base4)
+        Build-Depends: base >=4
+        CPP-Options: -DBASE4
+        GHC-Options: -Wall
+    else
+        Build-Depends: base <4
+    if impl(ghc >= 6.10)
+        Build-Depends: base >=4
+        Extensions: CPP
+        
+Executable optimize-1-tests
+    Main-Is:            HUnitTestOptimize.hs
+    HS-Source-Dirs:     . tests
+    Build-Depends:      base<5
+    GHC-Options:        -O1
+    if flag(base4)
+        Build-Depends: base >=4
+        CPP-Options: -DBASE4
+        GHC-Options: -Wall
+    else
+        Build-Depends: base <4
+    if impl(ghc >= 6.10)
+        Build-Depends: base >=4
+        Extensions: CPP
+        
+Executable optimize-2-tests
+    Main-Is:            HUnitTestOptimize.hs
+    HS-Source-Dirs:     . tests
+    Build-Depends:      base<5
+    GHC-Options:        -O2
+    if flag(base4)
+        Build-Depends: base >=4
+        CPP-Options: -DBASE4
+        GHC-Options: -Wall
+    else
+        Build-Depends: base <4
+    if impl(ghc >= 6.10)
+        Build-Depends: base >=4
+        Extensions: CPP
+        
