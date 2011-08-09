@@ -85,6 +85,14 @@ performTestCase action =
        return Nothing
      `E.catches`
       [E.Handler (\(HUnitFailure msg) -> return $ Just (True, msg)),
+
+       -- Re-throw AsyncException, otherwise execution will not terminate on
+       -- SIGINT (ctrl-c).  Currently, all AsyncExceptions are being thrown
+       -- because it's thought that none of them will be encountered during
+       -- normal HUnit operation.  If you encounter an example where this
+       -- is not the case, please email the maintainer.
+       E.Handler (\e -> throw (e :: E.AsyncException)),
+
        E.Handler (\e -> return $ Just (False, show (e :: E.SomeException)))]
 #else
 assertFailure msg = E.throwDyn (HUnitFailure msg)
