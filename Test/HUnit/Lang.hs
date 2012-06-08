@@ -26,6 +26,7 @@ import Data.List (isPrefixOf)
 import System.IO.Error (ioeGetErrorString, try)
 #endif
 
+import Control.DeepSeq
 
 
 -- Interfaces
@@ -78,7 +79,7 @@ instance Typeable HUnitFailure where
 #ifdef BASE4
 instance Exception HUnitFailure
 
-assertFailure msg = E.throwIO (HUnitFailure msg)
+assertFailure msg = msg `deepseq` E.throwIO (HUnitFailure msg)
 
 performTestCase action = 
     do action
@@ -95,7 +96,7 @@ performTestCase action =
 
        E.Handler (\e -> return $ Just (False, show (e :: E.SomeException)))]
 #else
-assertFailure msg = E.throwDyn (HUnitFailure msg)
+assertFailure msg = msg `deepseq` E.throwDyn (HUnitFailure msg)
 
 performTestCase action = 
     do r <- E.try action
@@ -112,7 +113,7 @@ hunitPrefix = "HUnit:"
 
 nhc98Prefix = "I/O error (user-defined), call to function `userError':\n  "
 
-assertFailure msg = ioError (userError (hunitPrefix ++ msg))
+assertFailure msg = msg `deepseq` ioError (userError (hunitPrefix ++ msg))
 
 performTestCase action = do r <- try action
                             case r of Right () -> return Nothing
