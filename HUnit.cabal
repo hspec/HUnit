@@ -1,5 +1,5 @@
 Name:                   HUnit
-Version:                1.2.4.2
+Version:                1.2.4.3
 Cabal-Version:          >= 1.6
 License:                BSD3
 License-File:           LICENSE
@@ -13,8 +13,8 @@ Description:
     HUnit is a unit testing framework for Haskell, inspired by the
     JUnit tool for Java, see: <http://www.junit.org>.
 Tested-With:
-    GHC == 6.12.3
-    GHC == 7.0.3
+    GHC == 7.0.4
+    GHC == 7.4.1
 Build-Type:             Custom
 Extra-Source-Files:
     tests/HUnitTest98.lhs
@@ -36,7 +36,9 @@ source-repository head
 flag base4
 
 Library
-    Build-Depends: base <5
+    Build-Depends: 
+        base < 5,
+        deepseq
     if flag(base4)
         Build-Depends: base >=4
         CPP-Options: -DBASE4
@@ -56,7 +58,9 @@ Library
 Executable basic-tests
     Main-Is:            HUnitTest98.lhs
     HS-Source-Dirs:     . tests
-    Build-Depends:      base<5
+    Build-Depends: 
+        base < 5,
+        deepseq
     if flag(base4)
         Build-Depends: base >=4
         CPP-Options: -DBASE4
@@ -70,7 +74,9 @@ Executable basic-tests
 Executable extended-tests
     Main-Is:            HUnitTestExtended.lhs
     HS-Source-Dirs:     . tests
-    Build-Depends:      base<5
+    Build-Depends: 
+        base < 5,
+        deepseq
     if flag(base4)
         Build-Depends: base >=4
         CPP-Options: -DBASE4
@@ -84,7 +90,9 @@ Executable extended-tests
 Executable terminal-tests
     Main-Is:            TerminalTest.lhs
     HS-Source-Dirs:     . tests
-    Build-Depends:      base<5
+    Build-Depends: 
+        base < 5,
+        deepseq
     if flag(base4)
         Build-Depends: base >=4
         CPP-Options: -DBASE4
@@ -100,7 +108,9 @@ Executable terminal-tests
 --Executable optimize-0-tests
 --    Main-Is:            HUnitTestOptimize.hs
 --    HS-Source-Dirs:     . tests
---    Build-Depends:      base<5
+--    Build-Depends: 
+--        base < 5,
+--        deepseq
 --    GHC-Options:        -O0
 --    if flag(base4)
 --        Build-Depends: base >=4
@@ -115,7 +125,9 @@ Executable terminal-tests
 Executable optimize-1-tests
     Main-Is:            HUnitTestOptimize.hs
     HS-Source-Dirs:     . tests
-    Build-Depends:      base<5
+    Build-Depends: 
+        base < 5,
+        deepseq
 -- Commenting out this line because, at the time of writing, -O1 is implied and
 -- the issue, that tests are optimized out of existence, is exposed at this 
 -- optimization level.
@@ -134,7 +146,9 @@ Executable optimize-1-tests
 --Executable optimize-2-tests
 --    Main-Is:            HUnitTestOptimize.hs
 --    HS-Source-Dirs:     . tests
---    Build-Depends:      base<5
+--    Build-Depends: 
+--        base < 5,
+--        deepseq
 --    GHC-Options:        -O2
 --    if flag(base4)
 --        Build-Depends: base >=4
