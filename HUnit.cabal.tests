@@ -28,7 +28,6 @@ Extra-Source-Files:
     tests/HUnitTestBase.lhs
     tests/HUnitTestExtended.lhs
     tests/HUnitTestOptimize.hs
-    tests/Setup.hs
     tests/TerminalTest.lhs
 Data-Files:
     doc/Guide.html
