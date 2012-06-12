@@ -1,3 +1,10 @@
+-- This CABAL file is used to build and run all of the various tests for the 
+-- project.  This separate file is necessary because Hackage does not allow
+-- the optimization level to be specified when building executables and some
+-- tests require different optimization levels to be set.
+--
+-- To use this file, simply copy it to HUnit.cabal, then build as normal.  You
+-- may rename the existing version of HUnit.cabal first, if you like.
 Name:                   HUnit
 Version:                1.2.4.3
 Cabal-Version:          >= 1.6
@@ -17,7 +24,6 @@ Tested-With:
     GHC == 7.4.1
 Build-Type:             Custom
 Extra-Source-Files:
-    HUnit.cabal.tests
     tests/HUnitTest98.lhs
     tests/HUnitTestBase.lhs
     tests/HUnitTestExtended.lhs
@@ -29,7 +35,6 @@ Data-Files:
     examples/Example.hs
     prologue.txt
     README
-
 source-repository head
     type:     darcs
     location: http://code.haskell.org/HUnit/
@@ -102,16 +107,51 @@ Executable terminal-tests
     if impl(ghc >= 6.10)
         Build-Depends: base >= 4
         Extensions: CPP
-        
-Executable optimize-tests
+
+Executable optimize-0-tests
     Main-Is:            HUnitTestOptimize.hs
     HS-Source-Dirs:     . tests
     Build-Depends: 
         base < 5,
         deepseq
+    GHC-Options:        -O0
     if flag(base4)
         Build-Depends: base >= 4
-        CPP-Options: -DBASE4
+        CPP-Options: -DBASE4 -DO0
+        GHC-Options: -Wall
+    else
+        Build-Depends: base < 4
+    if impl(ghc >= 6.10)
+        Build-Depends: base >= 4
+        Extensions: CPP
+        
+Executable optimize-1-tests
+    Main-Is:            HUnitTestOptimize.hs
+    HS-Source-Dirs:     . tests
+    Build-Depends: 
+        base < 5,
+        deepseq
+    GHC-Options:        -O1
+    if flag(base4)
+        Build-Depends: base >= 4
+        CPP-Options: -DBASE4 -DO1
+        GHC-Options: -Wall
+    else
+        Build-Depends: base < 4
+    if impl(ghc >= 6.10)
+        Build-Depends: base >= 4
+        Extensions: CPP
+        
+Executable optimize-2-tests
+    Main-Is:            HUnitTestOptimize.hs
+    HS-Source-Dirs:     . tests
+    Build-Depends: 
+        base < 5,
+        deepseq
+    GHC-Options:        -O2
+    if flag(base4)
+        Build-Depends: base >= 4
+        CPP-Options: -DBASE4 -DO2
         GHC-Options: -Wall
     else
         Build-Depends: base < 4
