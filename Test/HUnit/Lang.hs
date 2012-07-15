@@ -5,7 +5,14 @@ module Test.HUnit.Lang
 (
   Assertion,
   assertFailure,
-  performTestCase
+  performTestCase,
+#if defined(__GLASGOW_HASKELL__) || defined(__HUGS__)
+-- * Internals
+-- |
+-- /Note:/ This is not part of the public API!  It is exposed so that you can
+-- tinker with the internals of HUnit, but do not expect it to be stable!
+  HUnitFailure (..)
+#endif
 )
 where
 
