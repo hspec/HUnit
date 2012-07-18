@@ -6,9 +6,13 @@
 -- With some versions and optimization levels of HUnit and GHC, tests were getting
 -- optimized out.  This is a very bad thing and needs to be tested for.
 
-module Main (main) where
+module HUnitTestOptimize (
+    optimizationTests,
+    undefinedSwallowsTests
+    ) where
 
-import Control.Monad (unless)
+import Control.Applicative
+import Control.Monad
 import Test.HUnit
 
 -- Used to include the optimization level in the test results
@@ -36,7 +40,7 @@ simpleTestRunner t = do
 -- Some combinations of HUnit, GHC, and optimization levels cause tests to be
 -- optimized away.  This section verifies that all tests of a type are
 -- performed.
-optimizationTests :: IO ()
+optimizationTests :: IO Bool
 optimizationTests = do
     counts2 <- simpleTestRunner $ TestLabel "Basic Optimization Tests" $ TestList [ 
         True ~=? True,
@@ -51,41 +55,59 @@ optimizationTests = do
     -- Verify results of counts2
     -- We can't use HUnit because it's possible that some tests have been
     -- optimized away, so we'll just do it manually.
-    unless 
-        (cases counts2 == 8)
-        (putStrLn $ "Failure: Basic Optimization (" ++ optimizationLevel ++ "): expected 8 test cases; only " ++ (show $ cases counts2) ++ " found.  Some may have been optimized out.")
-    unless 
-        (tried counts2 == 8)
-        (putStrLn $ "Failure: Basic Optimization (" ++ optimizationLevel ++ "): expected to try 8 test cases; only " ++ (show $ tried counts2) ++ " tried.  Some may have been optimized out.")
-    unless 
-        (errors counts2 == 0)
-        (putStrLn $ "Failure: Basic Optimization (" ++ optimizationLevel ++ "): expected 0 errors; " ++ (show $ errors counts2) ++ " found.")
-    unless
-        (failures counts2 == 6)
-        (putStrLn $ "Failure: Basic Optimization (" ++ optimizationLevel ++ "): expected 6 failed cases; only " ++ (show $ failures counts2) ++ " failed.  Some may have been optimized out.")
-    return ()
+    foldr (&&) True <$> sequence [
+        caseCount counts2 optimizationLevel, 
+        tryCount counts2 optimizationLevel, 
+        errorCount counts2 optimizationLevel, 
+        failureCount counts2 optimizationLevel
+        ]
+    where
+        caseCount cs ol = if (cases cs == 8) 
+                    then return True
+                    else do
+                        putStrLn $ "Failure: Basic Optimization (" ++ 
+                                ol ++ "): expected 8 test cases; only " ++ 
+                                (show $ cases cs) ++ 
+                                " found.  Some may have been optimized out."
+                        return False
+        tryCount cs ol = if (tried cs == 8) 
+                    then return True
+                    else do
+                        putStrLn $ "Failure: Basic Optimization (" ++ 
+                            ol ++ "): expected to try 8 test cases; only " ++ 
+                            (show $ tried cs) ++ 
+                            " tried.  Some may have been optimized out."
+                        return False
+        errorCount cs ol = if (errors cs == 0) 
+                    then return True
+                    else do
+                        putStrLn $ "Failure: Basic Optimization (" ++ 
+                            ol ++ "): expected 0 errors; " ++ 
+                            (show $ errors cs) ++ " found."
+                        return False
+        failureCount cs ol = if (failures cs == 6) 
+                    then return True
+                    else do
+                        putStrLn $ "Failure: Basic Optimization (" ++ 
+                            ol ++ "): expected 6 failed cases; only " ++ 
+                            (show $ failures cs) ++ 
+                            " failed.  Some may have been optimized out."
+                        return False
 
 -- Added in 1.4.2.3
 -- When certain errors occur in a list of tests, the subsequent tests in the
 -- list weren't being run.  This test verifies that this does not happen.
-undefinedSwallowsTests :: IO ()
-undefinedSwallowsTests = do
-    -- Added in 1.2.4.3 because the second test case will never be run
-    -- (in prior versions)
-    counts2 <- simpleTestRunner . TestList $ [
-        TestCase $ ('f' : undefined) @?= "bar",
-        TestCase $ "foo" @?= "bar"
+undefinedSwallowsTests :: Test
+undefinedSwallowsTests = TestLabel ("Undefined Swallows Tests (" ++ optimizationLevel ++ ")") $ TestList [
+        TestCase $ do
+            rs <- simpleTestRunner . TestList $ [
+                -- Added in 1.2.4.3 because the second test case will never be run
+                -- (in prior versions)
+                TestCase $ ('f' : undefined) @?= "bar",
+                TestCase $ "foo" @?= "bar"
+                ]
+            assertEqual 
+                "(cases,tried,errors,failures)" 
+                (cases rs, tried rs, errors rs, failures rs)
+                (2, 2, 1, 1)
         ]
-    _ <- runTestTT $ TestLabel ("Undefined Swallows Tests (" ++ optimizationLevel ++ ")") $ TestList [
-        TestCase $ assertEqual "cases" (cases counts2) 2, 
-        TestCase $ assertEqual "tried" (tried counts2) 2, 
-        TestCase $ assertEqual "errors" (errors counts2) 1, 
-        TestCase $ assertEqual "failures" (failures counts2) 1
-        ]
-    return ()
-
--- A simple sequencer of the 2 tests
-main :: IO ()
-main = do
-    optimizationTests
-    undefinedSwallowsTests
