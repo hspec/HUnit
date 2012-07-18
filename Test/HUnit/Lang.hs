@@ -78,7 +78,11 @@ data HUnitFailure = HUnitFailure String
     deriving Show
 
 hunitFailureTc :: TyCon
+#if MIN_VERSION_base(4,4,0)
+hunitFailureTc = mkTyCon3 "HUnit" "Test.HUnit.Lang" "HUnitFailure"
+#else
 hunitFailureTc = mkTyCon "HUnitFailure"
+#endif
 {-# NOINLINE hunitFailureTc #-}
  
 instance Typeable HUnitFailure where
