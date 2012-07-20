@@ -15,7 +15,7 @@ Description:
 Tested-With:
     GHC == 7.0.4
     GHC == 7.4.1
-Build-Type:             Custom
+Build-Type:             Simple
 Extra-Source-Files:
     tests/HUnitTests.hs
     tests/HUnitTestBase.lhs
