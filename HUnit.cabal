@@ -17,6 +17,9 @@ Tested-With:
     GHC == 7.4.1
 Build-Type:             Simple
 Extra-Source-Files:
+    HUnit.cabal.hugs
+    HUnit.cabal.tests
+    Setup.hs.hugs
     tests/HUnitTests.hs
     tests/HUnitTestBase.lhs
     tests/HUnitTestExtended.hs
