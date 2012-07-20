@@ -24,16 +24,17 @@ Tested-With:
     GHC == 7.4.1
 Build-Type:             Custom
 Extra-Source-Files:
-    tests/HUnitTest98.lhs
+    tests/HUnitTests.hs
     tests/HUnitTestBase.lhs
-    tests/HUnitTestExtended.lhs
+    tests/HUnitTestExtended.hs
     tests/HUnitTestOptimize.hs
-    tests/TerminalTest.lhs
+    tests/TerminalTest.hs
 Data-Files:
     doc/Guide.html
     examples/Example.hs
     prologue.txt
     README
+
 source-repository head
     type:     darcs
     location: http://code.haskell.org/HUnit/
@@ -60,59 +61,14 @@ Library
         Test.HUnit
     Extensions: CPP
 
-Executable basic-tests
-    Main-Is:            HUnitTest98.lhs
+Test-Suite hunit-tests-optimize-0
+    Type:               exitcode-stdio-1.0
+    Main-Is:            HUnitTests.hs
     HS-Source-Dirs:     . tests
     Build-Depends: 
         base < 5,
-        deepseq
-    if flag(base4)
-        Build-Depends: base >= 4
-        CPP-Options: -DBASE4
-        GHC-Options: -Wall
-    else
-        Build-Depends: base < 4
-    if impl(ghc >= 6.10)
-        Build-Depends: base >= 4
-        Extensions: CPP
-
-Executable extended-tests
-    Main-Is:            HUnitTestExtended.lhs
-    HS-Source-Dirs:     . tests
-    Build-Depends: 
-        base < 5,
-        deepseq
-    if flag(base4)
-        Build-Depends: base >= 4
-        CPP-Options: -DBASE4
-        GHC-Options: -Wall
-    else
-        Build-Depends: base < 4
-    if impl(ghc >= 6.10)
-        Build-Depends: base >= 4
-        Extensions: CPP
-
-Executable terminal-tests
-    Main-Is:            TerminalTest.lhs
-    HS-Source-Dirs:     . tests
-    Build-Depends: 
-        base < 5,
-        deepseq
-    if flag(base4)
-        Build-Depends: base >= 4
-        CPP-Options: -DBASE4
-    else
-        Build-Depends: base < 4
-    if impl(ghc >= 6.10)
-        Build-Depends: base >= 4
-        Extensions: CPP
-
-Executable optimize-0-tests
-    Main-Is:            HUnitTestOptimize.hs
-    HS-Source-Dirs:     . tests
-    Build-Depends: 
-        base < 5,
-        deepseq
+        deepseq,
+        filepath
     GHC-Options:        -O0
     if flag(base4)
         Build-Depends: base >= 4
@@ -124,8 +80,9 @@ Executable optimize-0-tests
         Build-Depends: base >= 4
         Extensions: CPP
         
-Executable optimize-1-tests
-    Main-Is:            HUnitTestOptimize.hs
+Test-Suite hunit-tests-optimize-1
+    Type:               exitcode-stdio-1.0
+    Main-Is:            HUnitTests.hs
     HS-Source-Dirs:     . tests
     Build-Depends: 
         base < 5,
@@ -141,8 +98,9 @@ Executable optimize-1-tests
         Build-Depends: base >= 4
         Extensions: CPP
         
-Executable optimize-2-tests
-    Main-Is:            HUnitTestOptimize.hs
+Test-Suite hunit-tests-optimize-2
+    Type:               exitcode-stdio-1.0
+    Main-Is:            HUnitTests.hs
     HS-Source-Dirs:     . tests
     Build-Depends: 
         base < 5,
