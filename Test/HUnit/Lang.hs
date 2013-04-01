@@ -1,6 +1,11 @@
 -- | This module abstracts the differences between implementations of 
 -- Haskell (e.g., GHC, Hugs, and NHC).
 
+{-# LANGUAGE CPP #-} 
+#if __GLASGOW_HASKELL__ >= 707
+{-# LANGUAGE DeriveDataTypeable #-}
+#endif
+
 module Test.HUnit.Lang
 (
   Assertion,
@@ -75,6 +80,9 @@ performTestCase :: Assertion -- ^ an assertion to be made during the test case r
 
 #if defined(__GLASGOW_HASKELL__) || defined(__HUGS__)
 data HUnitFailure = HUnitFailure String
+#if __GLASGOW_HASKELL__ >= 707
+    deriving (Show, Typeable)
+#else
     deriving Show
 
 hunitFailureTc :: TyCon
@@ -87,6 +95,8 @@ hunitFailureTc = mkTyCon "HUnitFailure"
  
 instance Typeable HUnitFailure where
     typeOf _ = mkTyConApp hunitFailureTc []
+#endif
+
 #ifdef BASE4
 instance Exception HUnitFailure
 

@@ -6,7 +6,7 @@
 -- To use this file, simply copy it to HUnit.cabal, then build as normal.  You
 -- may rename the existing version of HUnit.cabal first, if you like.
 Name:                   HUnit
-Version:                1.2.5.1
+Version:                1.2.5.2
 Cabal-Version:          >= 1.8
 License:                BSD3
 License-File:           LICENSE
@@ -20,8 +20,9 @@ Description:
     HUnit is a unit testing framework for Haskell, inspired by the
     JUnit tool for Java, see: <http://www.junit.org>.
 Tested-With:
-    GHC == 7.0.4
     GHC == 7.4.1
+    GHC == 7.4.2
+    GHC == 7.7
 Build-Type:             Simple
 Extra-Source-Files:
     HUnit.cabal.hugs
