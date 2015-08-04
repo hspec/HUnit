@@ -12,20 +12,7 @@ Synopsis:               A unit testing framework for Haskell
 Description:
     HUnit is a unit testing framework for Haskell, inspired by the
     JUnit tool for Java, see: <http://www.junit.org>.
-Tested-With:
-    GHC == 7.4.1
-    GHC == 7.4.2
-    GHC == 7.7
 Build-Type:             Simple
-Extra-Source-Files:
-    HUnit.cabal.hugs
-    HUnit.cabal.tests
-    Setup.hs.hugs
-    tests/HUnitTests.hs
-    tests/HUnitTestBase.lhs
-    tests/HUnitTestExtended.hs
-    tests/HUnitTestOptimize.hs
-    tests/TerminalTest.hs
 Data-Files:
     doc/Guide.html
     examples/Example.hs
@@ -36,24 +23,30 @@ source-repository head
     type:     darcs
     location: http://code.haskell.org/HUnit/
 
-flag base4
-
 Library
-    Build-Depends: 
-        base < 5,
+    Build-Depends:
+        base == 4.*,
         deepseq
-    if flag(base4)
-        Build-Depends: base >= 4
-        CPP-Options: -DBASE4
-        GHC-Options: -Wall
-    else
-        Build-Depends: base < 4
-    if impl(ghc >= 6.10)
-        Build-Depends: base >= 4
     Exposed-Modules:
         Test.HUnit.Base,
         Test.HUnit.Lang,
         Test.HUnit.Terminal,
         Test.HUnit.Text,
         Test.HUnit
-    Extensions: CPP
+    GHC-Options: -Wall
+
+Test-Suite tests
+    Type:               exitcode-stdio-1.0
+    Main-Is:            HUnitTests.hs
+    HS-Source-Dirs:     tests
+    Build-Depends:
+        base == 4.*,
+        deepseq,
+        filepath,
+        HUnit
+    Other-Modules:
+        HUnitTests
+        HUnitTestBase
+        HUnitTestExtended
+        TerminalTest
+    GHC-Options:        -Wall

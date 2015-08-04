@@ -88,11 +88,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >   "null" ~: expectSuccess ok,
 
 >   "userError" ~:
-#if defined(__GLASGOW_HASKELL__)
 >     expectError "user error (error)" (TestCase (ioError (userError "error"))),
-#else
->     expectError "error" (TestCase (ioError (userError "error"))),
-#endif
 
 >   "IO error (file missing)" ~:
 >     expectUnspecifiedError
@@ -270,11 +266,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 
 >   "lone error" ~:
 >     expectText (Counts 1 1 1 0)
-#if defined(__GLASGOW_HASKELL__)
 >         "### Error:\nuser error (xyz)\nCases: 1  Tried: 1  Errors: 1  Failures: 0\n"
-#else
->         "### Error:\nxyz\nCases: 1  Tried: 1  Errors: 1  Failures: 0\n"
-#endif
 >         (test (do _ <- ioError (userError "xyz"); return ())),
 
 >   "lone failure" ~:
