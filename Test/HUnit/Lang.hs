@@ -1,7 +1,7 @@
--- | This module abstracts the differences between implementations of 
+-- | This module abstracts the differences between implementations of
 -- Haskell (e.g., GHC, Hugs, and NHC).
 
-{-# LANGUAGE CPP #-} 
+{-# LANGUAGE CPP #-}
 #if __GLASGOW_HASKELL__ >= 707
 {-# LANGUAGE DeriveDataTypeable #-}
 #endif
@@ -45,7 +45,7 @@ import Control.DeepSeq
 -- ----------
 
 -- | When an assertion is evaluated, it will output a message if and only if the
--- assertion fails.  
+-- assertion fails.
 --
 -- Test cases are composed of a sequence of one or more assertions.
 
@@ -55,12 +55,12 @@ type Assertion = IO ()
 -- other assertions can be expressed with the form:
 --
 -- @
---    if conditionIsMet 
---        then IO () 
+--    if conditionIsMet
+--        then IO ()
 --        else assertFailure msg
--- @ 
+-- @
 
-assertFailure :: String -- ^ A message that is displayed with the assertion failure 
+assertFailure :: String -- ^ A message that is displayed with the assertion failure
               -> Assertion
 
 -- | Performs a single test case.  The meaning of the result is as follows:
@@ -71,7 +71,7 @@ assertFailure :: String -- ^ A message that is displayed with the assertion fail
 --
 --     [@Just (False, msg)@] test case error with the given message
 
-performTestCase :: Assertion -- ^ an assertion to be made during the test case run 
+performTestCase :: Assertion -- ^ an assertion to be made during the test case run
                 -> IO (Maybe (Bool, String))
 
 
@@ -92,7 +92,7 @@ hunitFailureTc = mkTyCon3 "HUnit" "Test.HUnit.Lang" "HUnitFailure"
 hunitFailureTc = mkTyCon "HUnitFailure"
 #endif
 {-# NOINLINE hunitFailureTc #-}
- 
+
 instance Typeable HUnitFailure where
     typeOf _ = mkTyConApp hunitFailureTc []
 #endif
@@ -102,7 +102,7 @@ instance Exception HUnitFailure
 
 assertFailure msg = msg `deepseq` E.throwIO (HUnitFailure msg)
 
-performTestCase action = 
+performTestCase action =
     do action
        return Nothing
      `E.catches`
@@ -119,11 +119,11 @@ performTestCase action =
 #else
 assertFailure msg = msg `deepseq` E.throwDyn (HUnitFailure msg)
 
-performTestCase action = 
+performTestCase action =
     do r <- E.try action
-       case r of 
+       case r of
          Right () -> return Nothing
-         Left e@(E.DynException dyn) -> 
+         Left e@(E.DynException dyn) ->
              case fromDynamic dyn of
                Just (HUnitFailure msg) -> return $ Just (True, msg)
                Nothing                 -> return $ Just (False, show e)
