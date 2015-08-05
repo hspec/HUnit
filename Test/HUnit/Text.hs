@@ -89,11 +89,14 @@ runTestText (PutText put us0) t = do
   reportStart ss us = put (showCounts (counts ss)) False us
   reportError   = reportProblem "Error:"   "Error in:   "
   reportFailure = reportProblem "Failure:" "Failure in: "
-  reportProblem p0 p1 msg ss us = put line True us
-   where line  = "### " ++ kind ++ path' ++ '\n' : msg
+  reportProblem p0 p1 loc msg ss us = put line True us
+   where line  = "### " ++ kind ++ path' ++ "\n" ++ formatLocation loc ++ msg
          kind  = if null path' then p0 else p1
          path' = showPath (path ss)
 
+formatLocation :: Maybe Location -> String
+formatLocation Nothing = ""
+formatLocation (Just loc) = locationFile loc ++ ":" ++ show (locationLine loc) ++ "\n"
 
 -- | Converts test execution counts to a string.
 
