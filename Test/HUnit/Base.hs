@@ -1,11 +1,11 @@
 -- | Basic definitions for the HUnit library.
 --
 --   This module contains what you need to create assertions and test cases and
---   combine them into test suites. 
+--   combine them into test suites.
 --
---   This module also provides infrastructure for 
---   implementing test controllers (which are used to execute tests). 
---   See "Test.HUnit.Text" for a great example of how to implement a test 
+--   This module also provides infrastructure for
+--   implementing test controllers (which are used to execute tests).
+--   See "Test.HUnit.Text" for a great example of how to implement a test
 --   controller.
 
 module Test.HUnit.Base
@@ -13,10 +13,10 @@ module Test.HUnit.Base
   -- ** Declaring tests
   Test(..),
   (~=?), (~?=), (~:), (~?),
-  
+
   -- ** Making assertions
   assertFailure, {- from Test.HUnit.Lang: -}
-  assertBool, assertEqual, assertString, 
+  assertBool, assertEqual, assertString,
   Assertion, {- from Test.HUnit.Lang: -}
   (@=?), (@?=), (@?),
 
@@ -27,8 +27,8 @@ module Test.HUnit.Base
 
   -- ** Test execution
   -- $testExecutionNote
-  State(..), Counts(..), 
-  Path, Node(..), 
+  State(..), Counts(..),
+  Path, Node(..),
   testCasePaths,
   testCaseCount,
   ReportStart, ReportProblem,
@@ -56,18 +56,18 @@ assertBool msg b = unless b (assertFailure msg)
 
 -- | Signals an assertion failure if a non-empty message (i.e., a message
 -- other than @\"\"@) is passed.
-assertString :: String    -- ^ The message that is displayed with the assertion failure 
+assertString :: String    -- ^ The message that is displayed with the assertion failure
              -> Assertion
 assertString s = unless (null s) (assertFailure s)
 
 -- | Asserts that the specified actual value is equal to the expected value.
--- The output message will contain the prefix, the expected value, and the 
+-- The output message will contain the prefix, the expected value, and the
 -- actual value.
---  
+--
 -- If the prefix is the empty string (i.e., @\"\"@), then the prefix is omitted
 -- and only the expected and actual values are output.
-assertEqual :: (Eq a, Show a) => String -- ^ The message prefix 
-                              -> a      -- ^ The expected value 
+assertEqual :: (Eq a, Show a) => String -- ^ The message prefix
+                              -> a      -- ^ The expected value
                               -> a      -- ^ The actual value
                               -> Assertion
 assertEqual preface expected actual =
@@ -81,10 +81,10 @@ assertEqual preface expected actual =
 
 -- | Allows the extension of the assertion mechanism.
 --
--- Since an 'Assertion' can be a sequence of @Assertion@s and @IO@ actions, 
+-- Since an 'Assertion' can be a sequence of @Assertion@s and @IO@ actions,
 -- there is a fair amount of flexibility of what can be achieved.  As a rule,
 -- the resulting @Assertion@ should be the body of a 'TestCase' or part of
--- a @TestCase@; it should not be used to assert multiple, independent 
+-- a @TestCase@; it should not be used to assert multiple, independent
 -- conditions.
 --
 -- If more complex arrangements of assertions are needed, 'Test's and
@@ -133,13 +133,13 @@ instance ListAssertable Char
 -- 2. Read data from a file, evaluate conditions.
 --
 -- 3. Clean up the file.
--- 
+--
 -- 4. Assert that the side effects of the read operation meet certain conditions.
 --
 -- 5. Assert that the conditions evaluated in step 2 are met.
 type AssertionPredicate = IO Bool
 
--- | Used to signify that a data type can be converted to an assertion 
+-- | Used to signify that a data type can be converted to an assertion
 -- predicate.
 class AssertionPredicable t
  where assertionPredicate :: t -> AssertionPredicate
@@ -186,7 +186,7 @@ actual @?= expected = assertEqual "" expected actual
 data Test
     -- | A single, independent test case composed.
     = TestCase Assertion
-    -- | A set of @Test@s sharing the same level in the hierarchy. 
+    -- | A set of @Test@s sharing the same level in the hierarchy.
     | TestList [Test]
     -- | A name or description for a subtree of the @Test@s.
     | TestLabel String Test
@@ -220,34 +220,34 @@ instance (Testable t) => Testable [t]
 infix  1 ~?, ~=?, ~?=
 infixr 0 ~:
 
--- | Creates a test case resulting from asserting the condition obtained 
+-- | Creates a test case resulting from asserting the condition obtained
 --   from the specified 'AssertionPredicable'.
 (~?) :: (AssertionPredicable t) => t       -- ^ A value of which the asserted condition is predicated
                                 -> String  -- ^ A message that is displayed on test failure
                                 -> Test
 predi ~? msg = TestCase (predi @? msg)
 
--- | Shorthand for a test case that asserts equality (with the expected 
+-- | Shorthand for a test case that asserts equality (with the expected
 --   value on the left-hand side, and the actual value on the right-hand
 --   side).
-(~=?) :: (Eq a, Show a) => a     -- ^ The expected value 
+(~=?) :: (Eq a, Show a) => a     -- ^ The expected value
                         -> a     -- ^ The actual value
                         -> Test
 expected ~=? actual = TestCase (expected @=? actual)
 
--- | Shorthand for a test case that asserts equality (with the actual 
+-- | Shorthand for a test case that asserts equality (with the actual
 --   value on the left-hand side, and the expected value on the right-hand
 --   side).
 (~?=) :: (Eq a, Show a) => a     -- ^ The actual value
-                        -> a     -- ^ The expected value 
+                        -> a     -- ^ The expected value
                         -> Test
 actual ~?= expected = TestCase (actual @?= expected)
 
--- | Creates a test from the specified 'Testable', with the specified 
+-- | Creates a test from the specified 'Testable', with the specified
 --   label attached to it.
 --
 -- Since 'Test' is @Testable@, this can be used as a shorthand way of attaching
--- a 'TestLabel' to one or more tests.  
+-- a 'TestLabel' to one or more tests.
 (~:) :: (Testable t) => String -> t -> Test
 label ~: t = TestLabel label (test t)
 
@@ -257,9 +257,9 @@ label ~: t = TestLabel label (test t)
 -- ==============
 
 -- $testExecutionNote
--- Note: the rest of the functionality in this module is intended for 
+-- Note: the rest of the functionality in this module is intended for
 -- implementors of test controllers. If you just want to run your tests cases,
--- simply use a test controller, such as the text-based controller in 
+-- simply use a test controller, such as the text-based controller in
 -- "Test.HUnit.Text".
 
 -- | A data structure that hold the results of tests that have been performed
@@ -302,13 +302,13 @@ testCaseCount (TestCase _)    = 1
 testCaseCount (TestList ts)   = sum (map testCaseCount ts)
 testCaseCount (TestLabel _ t) = testCaseCount t
 
--- | Performs a test run with the specified report generators.  
+-- | Performs a test run with the specified report generators.
 --
--- This handles the actual running of the tests.  Most developers will want 
--- to use @HUnit.Text.runTestTT@ instead.  A developer could use this function 
--- to execute tests via another IO system, such as a GUI, or to output the 
--- results in a different manner (e.g., upload XML-formatted results to a 
--- webservice).  
+-- This handles the actual running of the tests.  Most developers will want
+-- to use @HUnit.Text.runTestTT@ instead.  A developer could use this function
+-- to execute tests via another IO system, such as a GUI, or to output the
+-- results in a different manner (e.g., upload XML-formatted results to a
+-- webservice).
 --
 -- Note that the counts in a start report do not include the test case
 -- being started, whereas the counts in a problem report do include the
@@ -316,11 +316,11 @@ testCaseCount (TestLabel _ t) = testCaseCount t
 -- only between test case executions.  As a result, the number of test
 -- case successes always equals the difference of test cases tried and
 -- the sum of test case errors and failures.
-performTest :: ReportStart us   -- ^ report generator for the test run start 
+performTest :: ReportStart us   -- ^ report generator for the test run start
             -> ReportProblem us -- ^ report generator for errors during the test run
             -> ReportProblem us -- ^ report generator for assertion failures during the test run
-            -> us 
-            -> Test             -- ^ the test to be executed 
+            -> us
+            -> Test             -- ^ the test to be executed
             -> IO (Counts, us)
 performTest reportStart reportError reportFailure initialUs initialT = do
   (ss', us') <- pt initState initialUs initialT
