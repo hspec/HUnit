@@ -9,18 +9,15 @@ import System.Exit
 import Test.HUnit
 import HUnitTestBase
 import HUnitTestExtended
-import HUnitTestOptimize
 import TerminalTest
 
 main :: IO ()
 main = do
     counts2 <- runTestTT (test [
-            baseTests, 
+            baseTests,
             extendedTests,
-            undefinedSwallowsTests,
             terminalTests
             ])
-    oPassed <- optimizationTests
-    if (errors counts2 + failures counts2 == 0 && oPassed) 
+    if (errors counts2 + failures counts2 == 0)
         then exitSuccess
         else exitFailure

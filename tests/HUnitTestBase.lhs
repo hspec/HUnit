@@ -1,7 +1,9 @@
 HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 
+> {-# LANGUAGE CPP #-}
 > module HUnitTestBase where
 
+> import Data.List
 > import Test.HUnit
 > import Test.HUnit.Terminal (terminalAppearance)
 > import System.IO (IOMode(..), openFile, hClose)
@@ -26,8 +28,8 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 > expectReports :: [Report] -> Counts -> Test -> Test
 > expectReports reports1 counts1 t = TestCase $ do
 >   (counts2, reports2) <- performTest (\  ss us -> return (Start     ss : us))
->                                      (\m ss us -> return (Error   m ss : us))
->                                      (\m ss us -> return (Failure m ss : us))
+>                                      (\_loc m ss us -> return (Error   m ss : us))
+>                                      (\_loc m ss us -> return (Failure m ss : us))
 >                                      [] t
 >   assertEqual "for the reports from a test," reports1 (reverse reports2)
 >   assertEqual "for the counts from a test," counts1 counts2
@@ -88,11 +90,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >   "null" ~: expectSuccess ok,
 
 >   "userError" ~:
-#if defined(__GLASGOW_HASKELL__)
 >     expectError "user error (error)" (TestCase (ioError (userError "error"))),
-#else
->     expectError "error" (TestCase (ioError (userError "error"))),
-#endif
 
 >   "IO error (file missing)" ~:
 >     expectUnspecifiedError
@@ -257,12 +255,14 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 > reportTests :: Test
 > reportTests = "reports" ~: expectReports suiteReports suiteCounts suite
 
+> removeLocation :: String -> String
+> removeLocation = unlines . filter (not . isInfixOf __FILE__) . lines
 
 > expectText :: Counts -> String -> Test -> Test
 > expectText counts1 text1 t = TestCase $ do
 >   (counts2, text2) <- runTestText putTextToShowS t
 >   assertEqual "for the final counts," counts1 counts2
->   assertEqual "for the failure text output," text1 (text2 "")
+>   assertEqual "for the failure text output," text1 (removeLocation $ text2 "")
 
 
 > textTests :: Test
@@ -270,11 +270,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 
 >   "lone error" ~:
 >     expectText (Counts 1 1 1 0)
-#if defined(__GLASGOW_HASKELL__)
 >         "### Error:\nuser error (xyz)\nCases: 1  Tried: 1  Errors: 1  Failures: 0\n"
-#else
->         "### Error:\nxyz\nCases: 1  Tried: 1  Errors: 1  Failures: 0\n"
-#endif
 >         (test (do _ <- ioError (userError "xyz"); return ())),
 
 >   "lone failure" ~:
@@ -295,7 +291,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 >           hClose handle
 >           assertEqual "for the final counts," suiteCounts counts'
 >           text <- readFile filename
->           let text' = if flag then trim (terminalAppearance text) else text
+>           let text' = removeLocation $ if flag then trim (terminalAppearance text) else text
 >           assertEqual "for the failure text output," suiteOutput text'
 >       | flag <- [False, True] ]
 

@@ -1,112 +1,86 @@
--- | This module abstracts the differences between implementations of 
--- Haskell (e.g., GHC, Hugs, and NHC).
-
-{-# LANGUAGE CPP #-} 
-#if __GLASGOW_HASKELL__ >= 707
 {-# LANGUAGE DeriveDataTypeable #-}
+
+{-# LANGUAGE CPP #-}
+#if MIN_VERSION_base(4,8,1)
+#define HAS_SOURCE_LOCATIONS
+{-# LANGUAGE ImplicitParams #-}
 #endif
 
-module Test.HUnit.Lang
-(
+module Test.HUnit.Lang (
   Assertion,
   assertFailure,
+
+  Location (..),
+  Result (..),
   performTestCase,
-#if defined(__GLASGOW_HASKELL__) || defined(__HUGS__)
 -- * Internals
 -- |
 -- /Note:/ This is not part of the public API!  It is exposed so that you can
 -- tinker with the internals of HUnit, but do not expect it to be stable!
   HUnitFailure (..)
+) where
+
+import           Control.DeepSeq
+import           Control.Exception as E
+import           Data.Typeable
+
+#ifdef HAS_SOURCE_LOCATIONS
+import           GHC.SrcLoc
+import           GHC.Stack
 #endif
-)
-where
-
-
--- When adapting this module for other Haskell language systems, change
--- the imports and the implementations but not the interfaces.
-
-
-
--- Imports
--- -------
-
-#if defined(__GLASGOW_HASKELL__) || defined(__HUGS__)
-import Data.Dynamic
-import Control.Exception as E
-#else
-import Data.List (isPrefixOf)
-import System.IO.Error (ioeGetErrorString, try)
-#endif
-
-import Control.DeepSeq
-
-
--- Interfaces
--- ----------
 
 -- | When an assertion is evaluated, it will output a message if and only if the
--- assertion fails.  
+-- assertion fails.
 --
 -- Test cases are composed of a sequence of one or more assertions.
-
 type Assertion = IO ()
+
+data Location = Location {
+  locationFile :: FilePath
+, locationLine :: Int
+, locationColumn :: Int
+} deriving (Eq, Ord, Show)
+
+data HUnitFailure = HUnitFailure (Maybe Location) String
+    deriving (Show, Typeable)
+
+instance Exception HUnitFailure
 
 -- | Unconditionally signals that a failure has occured.  All
 -- other assertions can be expressed with the form:
 --
 -- @
---    if conditionIsMet 
---        then IO () 
+--    if conditionIsMet
+--        then IO ()
 --        else assertFailure msg
--- @ 
-
-assertFailure :: String -- ^ A message that is displayed with the assertion failure 
-              -> Assertion
-
--- | Performs a single test case.  The meaning of the result is as follows:
---
---     [@Nothing@]           test case success
---
---     [@Just (True,  msg)@] test case failure with the given message
---
---     [@Just (False, msg)@] test case error with the given message
-
-performTestCase :: Assertion -- ^ an assertion to be made during the test case run 
-                -> IO (Maybe (Bool, String))
-
-
--- Implementations
--- ---------------
-
-#if defined(__GLASGOW_HASKELL__) || defined(__HUGS__)
-data HUnitFailure = HUnitFailure String
-#if __GLASGOW_HASKELL__ >= 707
-    deriving (Show, Typeable)
-#else
-    deriving Show
-
-hunitFailureTc :: TyCon
-#if MIN_VERSION_base(4,4,0)
-hunitFailureTc = mkTyCon3 "HUnit" "Test.HUnit.Lang" "HUnitFailure"
-#else
-hunitFailureTc = mkTyCon "HUnitFailure"
+-- @
+assertFailure ::
+#ifdef HAS_SOURCE_LOCATIONS
+     (?loc :: CallStack) =>
 #endif
-{-# NOINLINE hunitFailureTc #-}
- 
-instance Typeable HUnitFailure where
-    typeOf _ = mkTyConApp hunitFailureTc []
+     String -- ^ A message that is displayed with the assertion failure
+  -> Assertion
+assertFailure msg = msg `deepseq` E.throwIO (HUnitFailure location msg)
+  where
+    location :: Maybe Location
+#ifdef HAS_SOURCE_LOCATIONS
+    location = case reverse (getCallStack ?loc) of
+      (_, loc) : _ -> Just $ Location (srcLocFile loc) (srcLocStartLine loc) (srcLocStartCol loc)
+      _ -> Nothing
+#else
+    location = Nothing
 #endif
 
-#ifdef BASE4
-instance Exception HUnitFailure
+data Result = Success | Failure (Maybe Location) String | Error (Maybe Location) String
+  deriving (Eq, Ord, Show)
 
-assertFailure msg = msg `deepseq` E.throwIO (HUnitFailure msg)
-
-performTestCase action = 
-    do action
-       return Nothing
+-- | Performs a single test case.
+performTestCase :: Assertion -- ^ an assertion to be made during the test case run
+                -> IO Result
+performTestCase action =
+  (action >> return Success)
      `E.catches`
-      [E.Handler (\(HUnitFailure msg) -> return $ Just (True, msg)),
+      [E.Handler (\(HUnitFailure loc msg) -> return $ Failure loc msg),
 
        -- Re-throw AsyncException, otherwise execution will not terminate on
        -- SIGINT (ctrl-c).  Currently, all AsyncExceptions are being thrown
@@ -115,35 +89,4 @@ performTestCase action =
        -- is not the case, please email the maintainer.
        E.Handler (\e -> throw (e :: E.AsyncException)),
 
-       E.Handler (\e -> return $ Just (False, show (e :: E.SomeException)))]
-#else
-assertFailure msg = msg `deepseq` E.throwDyn (HUnitFailure msg)
-
-performTestCase action = 
-    do r <- E.try action
-       case r of 
-         Right () -> return Nothing
-         Left e@(E.DynException dyn) -> 
-             case fromDynamic dyn of
-               Just (HUnitFailure msg) -> return $ Just (True, msg)
-               Nothing                 -> return $ Just (False, show e)
-         Left e -> return $ Just (False, show e)
-#endif
-#else
-hunitPrefix = "HUnit:"
-
-nhc98Prefix = "I/O error (user-defined), call to function `userError':\n  "
-
-assertFailure msg = msg `deepseq` ioError (userError (hunitPrefix ++ msg))
-
-performTestCase action = do r <- try action
-                            case r of Right () -> return Nothing
-                                      Left  e  -> return (Just (decode e))
- where
-  decode e = let s0 = ioeGetErrorString e
-                 (_, s1) = dropPrefix nhc98Prefix s0
-             in            dropPrefix hunitPrefix s1
-  dropPrefix pref str = if pref `isPrefixOf` str
-                          then (True, drop (length pref) str)
-                          else (False, str)
-#endif
+       E.Handler (\e -> return $ Error Nothing $ show (e :: E.SomeException))]

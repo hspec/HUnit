@@ -49,9 +49,9 @@ data PutText st = PutText (String -> Bool -> st -> IO st) st
 -- carriage return and blank characters, its proper effect is usually
 -- only obtained on terminal devices.
 
-putTextToHandle 
-    :: Handle 
-    -> Bool -- ^ Write progress lines to handle? 
+putTextToHandle
+    :: Handle
+    -> Bool -- ^ Write progress lines to handle?
     -> PutText Int
 putTextToHandle handle showProgress = PutText put initCnt
  where
@@ -64,8 +64,8 @@ putTextToHandle handle showProgress = PutText put initCnt
   erase cnt = if cnt == 0 then "" else "\r" ++ replicate cnt ' ' ++ "\r"
 
 
--- | Accumulates persistent lines (dropping progess lines) for return by 
---   'runTestText'.  The accumulated lines are represented by a 
+-- | Accumulates persistent lines (dropping progess lines) for return by
+--   'runTestText'.  The accumulated lines are represented by a
 --   @'ShowS' ('String' -> 'String')@ function whose first argument is the
 --   string to be appended to the accumulated report lines.
 
@@ -75,9 +75,9 @@ putTextToShowS = PutText put id
        acc f line rest = f (line ++ '\n' : rest)
 
 
--- | Executes a test, processing each report line according to the given 
---   reporting scheme.  The reporting scheme's state is threaded through calls 
---   to the reporting scheme's function and finally returned, along with final 
+-- | Executes a test, processing each report line according to the given
+--   reporting scheme.  The reporting scheme's state is threaded through calls
+--   to the reporting scheme's function and finally returned, along with final
 --   count values.
 
 runTestText :: PutText st -> Test -> IO (Counts, st)
@@ -89,11 +89,14 @@ runTestText (PutText put us0) t = do
   reportStart ss us = put (showCounts (counts ss)) False us
   reportError   = reportProblem "Error:"   "Error in:   "
   reportFailure = reportProblem "Failure:" "Failure in: "
-  reportProblem p0 p1 msg ss us = put line True us
-   where line  = "### " ++ kind ++ path' ++ '\n' : msg
+  reportProblem p0 p1 loc msg ss us = put line True us
+   where line  = "### " ++ kind ++ path' ++ "\n" ++ formatLocation loc ++ msg
          kind  = if null path' then p0 else p1
          path' = showPath (path ss)
 
+formatLocation :: Maybe Location -> String
+formatLocation Nothing = ""
+formatLocation (Just loc) = locationFile loc ++ ":" ++ show (locationLine loc) ++ "\n"
 
 -- | Converts test execution counts to a string.
 
@@ -104,7 +107,7 @@ showCounts Counts{ cases = cases', tried = tried',
   "  Errors: " ++ show errors' ++ "  Failures: " ++ show failures'
 
 
--- | Converts a test case path to a string, separating adjacent elements by 
+-- | Converts a test case path to a string, separating adjacent elements by
 --   the colon (\':\'). An element of the path is quoted (as with 'show') when
 --   there is potential ambiguity.
 
@@ -118,7 +121,7 @@ showPath nodes = foldl1 f (map showNode nodes)
 
 
 -- | Provides the \"standard\" text-based test controller. Reporting is made to
---   standard error, and progress reports are included. For possible 
+--   standard error, and progress reports are included. For possible
 --   programmatic use, the final counts are returned.
 --
 --   The \"TT\" in the name suggests \"Text-based reporting to the Terminal\".

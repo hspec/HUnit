@@ -1,8 +1,8 @@
--- | HUnit is a unit testing framework for Haskell, inspired by the JUnit tool 
--- for Java. This guide describes how to use HUnit, assuming you are familiar 
+-- | HUnit is a unit testing framework for Haskell, inspired by the JUnit tool
+-- for Java. This guide describes how to use HUnit, assuming you are familiar
 -- with Haskell, though not necessarily with JUnit.
 --
--- In the Haskell module where your tests will reside, import module 
+-- In the Haskell module where your tests will reside, import module
 -- @Test.HUnit@:
 --
 -- @
@@ -10,7 +10,7 @@
 -- @
 --
 --  Define test cases as appropriate:
--- 
+--
 -- @
 --    test1 = TestCase (assertEqual "for (foo 3)," (1,2) (foo 3))
 --    test2 = TestCase (do (x,y) <- partA 3
@@ -26,7 +26,7 @@
 -- @
 --
 -- Run the tests as a group. At a Haskell interpreter prompt, apply the function
--- @runTestTT@ to the collected tests. (The /TT/ suggests /T/ext orientation 
+-- @runTestTT@ to the collected tests. (The /TT/ suggests /T/ext orientation
 -- with output to the /T/erminal.)
 --
 -- @
@@ -47,7 +47,7 @@
 --    \>
 -- @
 --
--- You can specify tests even more succinctly using operators and overloaded 
+-- You can specify tests even more succinctly using operators and overloaded
 -- functions that HUnit provides:
 --
 -- @
