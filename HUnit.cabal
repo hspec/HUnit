@@ -1,10 +1,10 @@
 Name:                   HUnit
-Version:                1.2.5.2
+Version:                1.3.0.0
 Cabal-Version:          >= 1.8
 License:                BSD3
 License-File:           LICENSE
 Author:                 Dean Herington
-Maintainer:             hunit@richardg.name
+Maintainer:             Simon Hengel <sol@typeful.net>
 Stability:              stable
 Homepage:               http://hunit.sourceforge.net/
 Category:               Testing
@@ -17,11 +17,11 @@ Data-Files:
     doc/Guide.html
     examples/Example.hs
     prologue.txt
-    README
+    README.md
 
 source-repository head
-    type:     darcs
-    location: http://code.haskell.org/HUnit/
+    type:     git
+    location: https://github.com/hspec/HUnit
 
 Library
     Build-Depends:
