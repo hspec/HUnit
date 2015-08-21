@@ -42,7 +42,7 @@ data Location = Location {
 } deriving (Eq, Ord, Show)
 
 data HUnitFailure = HUnitFailure (Maybe Location) String
-    deriving (Show, Typeable)
+    deriving (Eq, Ord, Show, Typeable)
 
 instance Exception HUnitFailure
 
