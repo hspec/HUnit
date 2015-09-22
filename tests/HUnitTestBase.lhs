@@ -17,7 +17,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 
 > instance Eq Report where
 >   Start s1            == Start s2             =  s1 == s2
->   Error m1 s1         == Error m2 s2          =  m1 == m2 && s1 == s2
+>   Error m1 s1         == Error m2 s2          =  (m1 `isPrefixOf` m2 || m2 `isPrefixOf` m1) && s1 == s2
 >   Error _  s1         == UnspecifiedError s2  =  s1 == s2
 >   UnspecifiedError s1 == Error _  s2          =  s1 == s2
 >   UnspecifiedError s1 == UnspecifiedError s2  =  s1 == s2
