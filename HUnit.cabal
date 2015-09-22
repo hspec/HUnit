@@ -27,6 +27,7 @@ source-repository head
 Library
     Build-Depends:
         base == 4.*,
+        ghc-prim,
         deepseq
     Exposed-Modules:
         Test.HUnit.Base,

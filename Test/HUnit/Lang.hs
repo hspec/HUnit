@@ -25,8 +25,12 @@ import           Control.Exception as E
 import           Data.Typeable
 
 #ifdef HAS_SOURCE_LOCATIONS
+#if MIN_VERSION_base(4,8,2)
+import           GHC.Types
+#else
 import           GHC.SrcLoc
 import           GHC.Stack
+#endif
 #endif
 
 -- | When an assertion is evaluated, it will output a message if and only if the

@@ -2,6 +2,7 @@
 #if MIN_VERSION_base(4,8,1)
 #define HAS_SOURCE_LOCATIONS
 {-# LANGUAGE ImplicitParams #-}
+{-# LANGUAGE ConstrainedClassMethods #-}
 #endif
 
 -- | Basic definitions for the HUnit library.
@@ -44,7 +45,11 @@ module Test.HUnit.Base
 where
 
 #ifdef HAS_SOURCE_LOCATIONS
+#if MIN_VERSION_base(4,8,2)
+import           GHC.Types
+#else
 import           GHC.Stack
+#endif
 #define with_loc (?loc :: CallStack) =>
 #else
 #define with_loc
