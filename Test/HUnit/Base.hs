@@ -2,6 +2,7 @@
 #if MIN_VERSION_base(4,8,1)
 #define HAS_SOURCE_LOCATIONS
 {-# LANGUAGE ImplicitParams #-}
+{-# LANGUAGE ConstrainedClassMethods #-}
 #endif
 
 -- | Basic definitions for the HUnit library.
