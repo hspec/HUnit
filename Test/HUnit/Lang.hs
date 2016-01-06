@@ -91,4 +91,8 @@ performTestCase action =
        -- is not the case, please email the maintainer.
        E.Handler (\e -> throw (e :: E.AsyncException)),
 
+#if MIN_VERSION_base(4,9,0)
+       E.Handler (\(E.ErrorCallWithLocation msg _) -> return $ Error Nothing msg),
+#endif
+
        E.Handler (\e -> return $ Error Nothing $ show (e :: E.SomeException))]
