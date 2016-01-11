@@ -17,6 +17,10 @@ See the user's guide for more information.
 
 ## Changes
 
+### 1.3.1.0
+
+- add minimal support for GHC 8.0
+
 ### 1.3.0.0
 
 - removed support for old compilers
