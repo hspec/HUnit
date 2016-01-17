@@ -1,9 +1,9 @@
 -- Example.hs  --  Examples from HUnit user's guide
 --
 -- For more examples, check out the tests directory.  It contains unit tests
--- for HUnit. 
+-- for HUnit.
 
-module Main where
+module Example where
 
 import Test.HUnit
 

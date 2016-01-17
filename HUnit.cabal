@@ -37,7 +37,7 @@ Library
 Test-Suite tests
     Type:               exitcode-stdio-1.0
     Main-Is:            HUnitTests.hs
-    HS-Source-Dirs:     tests
+    HS-Source-Dirs:     tests, examples
     Build-Depends:
         base == 4.*,
         deepseq,
@@ -48,4 +48,5 @@ Test-Suite tests
         HUnitTestBase
         HUnitTestExtended
         TerminalTest
+        Example
     GHC-Options:        -Wall

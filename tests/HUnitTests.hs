@@ -10,6 +10,7 @@ import Test.HUnit
 import HUnitTestBase
 import HUnitTestExtended
 import TerminalTest
+import Example ()
 
 main :: IO ()
 main = do
