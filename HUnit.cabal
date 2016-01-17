@@ -16,7 +16,6 @@ Build-Type:             Simple
 Extra-Source-Files:
     CHANGELOG.md
     README.md
-    Guide.md
     examples/Example.hs
 
 source-repository head
