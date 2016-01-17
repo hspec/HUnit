@@ -180,7 +180,7 @@ As soon as you have more than one test, you'll want to name them to tell them ap
  soon as you have more than several tests, you'll want to group them to process them more
  easily. So, naming and grouping are the two keys to managing collections of tests.
 
-In tune with the "composite" design pattern [1](#design-patterns), a
+In tune with the "composite" design pattern [1], a
  **test** is defined as a package of test cases. Concretely, a test is either a single
  test case, a group of tests, or either of the first two identified by a label.
 
