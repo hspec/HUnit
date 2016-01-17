@@ -18,7 +18,6 @@ Extra-Source-Files:
     README.md
     doc/Guide.html
     examples/Example.hs
-    prologue.txt
 
 source-repository head
     type:     git
