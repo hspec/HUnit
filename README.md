@@ -14,15 +14,3 @@ in Test/HUnit (whose names end in ".hs" or ".lhs"), these files include:
 ```
 
 See the user's guide for more information.
-
-## Changes
-
-### 1.3.1.0
-
-- add minimal support for GHC 8.0
-
-### 1.3.0.0
-
-- removed support for old compilers
-
-- add source locations for failing assertions (GHC >= 7.10.2 only)
