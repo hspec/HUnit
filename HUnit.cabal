@@ -15,11 +15,10 @@ Description:
 Build-Type:             Simple
 Extra-Source-Files:
     CHANGELOG.md
-Data-Files:
+    README.md
     doc/Guide.html
     examples/Example.hs
     prologue.txt
-    README.md
 
 source-repository head
     type:     git
