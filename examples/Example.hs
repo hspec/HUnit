@@ -36,5 +36,5 @@ tests' = test [ "test1" ~: "(foo 3)" ~: (1,2) ~=? (foo 3),
                               partB y @? "(partB " ++ show y ++ ") failed" ]
 
 main :: IO Counts
-main = do runTestTT tests
+main = do _ <- runTestTT tests
           runTestTT tests'
