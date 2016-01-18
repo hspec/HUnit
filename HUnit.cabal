@@ -6,7 +6,7 @@ License-File:           LICENSE
 Author:                 Dean Herington
 Maintainer:             Simon Hengel <sol@typeful.net>
 Stability:              stable
-Homepage:               https://github.com/hspec/HUnit#hunit
+Homepage:               https://github.com/hspec/HUnit#readme
 Category:               Testing
 Synopsis:               A unit testing framework for Haskell
 Description:
