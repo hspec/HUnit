@@ -1,5 +1,9 @@
 ## Changes
 
+#### 1.3.1.1
+
+- Various updates to metadata and documentation removing outdated information and making other things more visible
+
 ### 1.3.1.0
 
 - add minimal support for GHC 8.0
