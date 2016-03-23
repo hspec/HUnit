@@ -1,5 +1,9 @@
 ## Changes
 
+#### 1.5.0.0
+
+- Preserve actual/expected for `assertEqual` failures
+
 #### 1.4.0.0
 
 - Depend on `call-stack`

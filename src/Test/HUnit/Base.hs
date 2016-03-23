@@ -65,23 +65,6 @@ assertString :: HasCallStack
              -> Assertion
 assertString s = unless (null s) (assertFailure s)
 
--- | Asserts that the specified actual value is equal to the expected value.
--- The output message will contain the prefix, the expected value, and the
--- actual value.
---
--- If the prefix is the empty string (i.e., @\"\"@), then the prefix is omitted
--- and only the expected and actual values are output.
-assertEqual :: (HasCallStack, Eq a, Show a)
-                              => String -- ^ The message prefix
-                              -> a      -- ^ The expected value
-                              -> a      -- ^ The actual value
-                              -> Assertion
-assertEqual preface expected actual =
-  unless (actual == expected) (assertFailure msg)
- where msg = (if null preface then "" else preface ++ "\n") ++
-             "expected: " ++ show expected ++ "\n but got: " ++ show actual
-
-
 -- Overloaded `assert` Function
 -- ----------------------------
 
