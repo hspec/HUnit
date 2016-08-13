@@ -10,7 +10,7 @@ A test-centered methodology for software development is most effective when test
 easy to create, change, and execute. The [JUnit](www.junit.org) tool
 pioneered support for test-first development in [Java](http://java.sun.com).
 HUnit is an adaptation of JUnit to Haskell, a general-purpose, purely functional
-programming language. (To learn more about Haskell, see www.haskell.org](http://www.haskell.org).
+programming language. (To learn more about Haskell, see [www.haskell.org](http://www.haskell.org)).
 
 With HUnit, as with JUnit, you can easily create tests, name them, group them into
 suites, and execute them, with the framework checking the results automatically. Test
