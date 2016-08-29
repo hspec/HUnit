@@ -1,5 +1,9 @@
 ## Changes
 
+#### 1.3.1.2
+
+- Fixes the test suite on GHC 8
+
 #### 1.3.1.1
 
 - Various updates to metadata and documentation removing outdated information and making other things more visible
