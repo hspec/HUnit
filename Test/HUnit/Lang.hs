@@ -1,11 +1,5 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE DeriveDataTypeable #-}
-
-{-# LANGUAGE CPP #-}
-#if MIN_VERSION_base(4,8,1)
-#define HAS_SOURCE_LOCATIONS
-{-# LANGUAGE ImplicitParams #-}
-#endif
-
 module Test.HUnit.Lang (
   Assertion,
   assertFailure,
@@ -23,25 +17,13 @@ module Test.HUnit.Lang (
 import           Control.DeepSeq
 import           Control.Exception as E
 import           Data.Typeable
-
-#ifdef HAS_SOURCE_LOCATIONS
-#if !(MIN_VERSION_base(4,9,0))
-import           GHC.SrcLoc
-#endif
-import           GHC.Stack
-#endif
+import           Data.WithLocation
 
 -- | When an assertion is evaluated, it will output a message if and only if the
 -- assertion fails.
 --
 -- Test cases are composed of a sequence of one or more assertions.
 type Assertion = IO ()
-
-data Location = Location {
-  locationFile :: FilePath
-, locationLine :: Int
-, locationColumn :: Int
-} deriving (Eq, Ord, Show)
 
 data HUnitFailure = HUnitFailure (Maybe Location) String
     deriving (Eq, Ord, Show, Typeable)
@@ -57,21 +39,11 @@ instance Exception HUnitFailure
 --        else assertFailure msg
 -- @
 assertFailure ::
-#ifdef HAS_SOURCE_LOCATIONS
-     (?loc :: CallStack) =>
-#endif
+     WithLocation (
      String -- ^ A message that is displayed with the assertion failure
   -> Assertion
+     )
 assertFailure msg = msg `deepseq` E.throwIO (HUnitFailure location msg)
-  where
-    location :: Maybe Location
-#ifdef HAS_SOURCE_LOCATIONS
-    location = case reverse (getCallStack ?loc) of
-      (_, loc) : _ -> Just $ Location (srcLocFile loc) (srcLocStartLine loc) (srcLocStartCol loc)
-      [] -> Nothing
-#else
-    location = Nothing
-#endif
 
 data Result = Success | Failure (Maybe Location) String | Error (Maybe Location) String
   deriving (Eq, Ord, Show)
