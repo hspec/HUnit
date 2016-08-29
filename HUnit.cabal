@@ -25,7 +25,6 @@ source-repository head
 Library
     Build-Depends:
         base == 4.*,
-        with-location >= 0.1.0,
         deepseq
     Exposed-Modules:
         Test.HUnit.Base,
