@@ -1,16 +1,11 @@
 {-# LANGUAGE DeriveDataTypeable #-}
-
-{-# LANGUAGE CPP #-}
-#if MIN_VERSION_base(4,8,1)
-#define HAS_SOURCE_LOCATIONS
-{-# LANGUAGE ImplicitParams #-}
-#endif
+{-# LANGUAGE ConstraintKinds #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 module Test.HUnit.Lang (
   Assertion,
   assertFailure,
 
-  Location (..),
   Result (..),
   performTestCase,
 -- * Internals
@@ -23,13 +18,7 @@ module Test.HUnit.Lang (
 import           Control.DeepSeq
 import           Control.Exception as E
 import           Data.Typeable
-
-#ifdef HAS_SOURCE_LOCATIONS
-#if !(MIN_VERSION_base(4,9,0))
-import           GHC.SrcLoc
-#endif
-import           GHC.Stack
-#endif
+import           Data.CallStack
 
 -- | When an assertion is evaluated, it will output a message if and only if the
 -- assertion fails.
@@ -37,14 +26,8 @@ import           GHC.Stack
 -- Test cases are composed of a sequence of one or more assertions.
 type Assertion = IO ()
 
-data Location = Location {
-  locationFile :: FilePath
-, locationLine :: Int
-, locationColumn :: Int
-} deriving (Eq, Ord, Show)
-
-data HUnitFailure = HUnitFailure (Maybe Location) String
-    deriving (Eq, Ord, Show, Typeable)
+data HUnitFailure = HUnitFailure (Maybe SrcLoc) String
+    deriving (Eq, Show, Typeable)
 
 instance Exception HUnitFailure
 
@@ -57,24 +40,18 @@ instance Exception HUnitFailure
 --        else assertFailure msg
 -- @
 assertFailure ::
-#ifdef HAS_SOURCE_LOCATIONS
-     (?loc :: CallStack) =>
-#endif
+     HasCallStack =>
      String -- ^ A message that is displayed with the assertion failure
   -> Assertion
 assertFailure msg = msg `deepseq` E.throwIO (HUnitFailure location msg)
   where
-    location :: Maybe Location
-#ifdef HAS_SOURCE_LOCATIONS
-    location = case reverse (getCallStack ?loc) of
-      (_, loc) : _ -> Just $ Location (srcLocFile loc) (srcLocStartLine loc) (srcLocStartCol loc)
+    location :: Maybe SrcLoc
+    location = case reverse callStack of
+      (_, loc) : _ -> Just loc
       [] -> Nothing
-#else
-    location = Nothing
-#endif
 
-data Result = Success | Failure (Maybe Location) String | Error (Maybe Location) String
-  deriving (Eq, Ord, Show)
+data Result = Success | Failure (Maybe SrcLoc) String | Error (Maybe SrcLoc) String
+  deriving (Eq, Show)
 
 -- | Performs a single test case.
 performTestCase :: Assertion -- ^ an assertion to be made during the test case run

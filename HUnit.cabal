@@ -31,7 +31,8 @@ library
     src
   build-depends:
     base == 4.*,
-    deepseq
+    deepseq,
+    call-stack
   exposed-modules:
     Test.HUnit.Base
     Test.HUnit.Lang
@@ -52,6 +53,7 @@ test-suite tests
   build-depends:
     base == 4.*,
     deepseq,
+    call-stack,
     filepath,
     HUnit
   other-modules:

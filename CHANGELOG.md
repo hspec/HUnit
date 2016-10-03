@@ -1,5 +1,9 @@
 ## Changes
 
+#### 1.4.0.0
+
+- Depend on `call-stack`
+
 #### 1.3.1.2
 
 - Fixes the test suite on GHC 8

@@ -13,6 +13,7 @@ where
 
 import Test.HUnit.Base
 
+import Data.CallStack
 import Control.Monad (when)
 import System.IO (Handle, stderr, hPutStr, hPutStrLn)
 
@@ -94,9 +95,9 @@ runTestText (PutText put us0) t = do
          kind  = if null path' then p0 else p1
          path' = showPath (path ss)
 
-formatLocation :: Maybe Location -> String
+formatLocation :: Maybe SrcLoc -> String
 formatLocation Nothing = ""
-formatLocation (Just loc) = locationFile loc ++ ":" ++ show (locationLine loc) ++ "\n"
+formatLocation (Just loc) = srcLocFile loc ++ ":" ++ show (srcLocStartLine loc) ++ "\n"
 
 -- | Converts test execution counts to a string.
 
