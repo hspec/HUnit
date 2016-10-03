@@ -1,4 +1,10 @@
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE CPP #-}
+#if MIN_VERSION_base(4,8,1)
+#define HAS_SOURCE_LOCATIONS
+{-# LANGUAGE ImplicitParams #-}
+{-# LANGUAGE ConstrainedClassMethods #-}
+#endif
+
 -- | Basic definitions for the HUnit library.
 --
 --   This module contains what you need to create assertions and test cases and
@@ -38,8 +44,15 @@ module Test.HUnit.Base
 )
 where
 
+#ifdef HAS_SOURCE_LOCATIONS
+import           GHC.Stack
+#define with_loc (?loc :: CallStack) =>
+#else
+#define with_loc
+#endif
+
 import Control.Monad (unless, foldM)
-import Data.WithLocation
+
 
 -- Assertion Definition
 -- ====================
@@ -51,19 +64,17 @@ import Test.HUnit.Lang
 -- -------------------------------
 
 -- | Asserts that the specified condition holds.
-assertBool :: WithLocation (
+assertBool :: with_loc
               String    -- ^ The message that is displayed if the assertion fails
            -> Bool      -- ^ The condition
            -> Assertion
-           )
 assertBool msg b = unless b (assertFailure msg)
 
 -- | Signals an assertion failure if a non-empty message (i.e., a message
 -- other than @\"\"@) is passed.
-assertString :: WithLocation (
+assertString :: with_loc
                 String    -- ^ The message that is displayed with the assertion failure
              -> Assertion
-             )
 assertString s = unless (null s) (assertFailure s)
 
 -- | Asserts that the specified actual value is equal to the expected value.
@@ -72,12 +83,11 @@ assertString s = unless (null s) (assertFailure s)
 --
 -- If the prefix is the empty string (i.e., @\"\"@), then the prefix is omitted
 -- and only the expected and actual values are output.
-assertEqual :: WithLocation ((Eq a, Show a)
+assertEqual :: with_loc (Eq a, Show a)
                               => String -- ^ The message prefix
                               -> a      -- ^ The expected value
                               -> a      -- ^ The actual value
                               -> Assertion
-                              )
 assertEqual preface expected actual =
   unless (actual == expected) (assertFailure msg)
  where msg = (if null preface then "" else preface ++ "\n") ++
@@ -98,7 +108,7 @@ assertEqual preface expected actual =
 -- If more complex arrangements of assertions are needed, 'Test's and
 -- 'Testable' should be used.
 class Assertable t
- where assert :: WithLocation (t -> Assertion)
+ where assert :: with_loc t -> Assertion
 
 instance Assertable ()
  where assert = return
@@ -114,7 +124,7 @@ instance (Assertable t) => Assertable (IO t)
 
 -- | A specialized form of 'Assertable' to handle lists.
 class ListAssertable t
- where listAssert :: WithLocation ([t] -> Assertion)
+ where listAssert :: with_loc [t] -> Assertion
 
 instance ListAssertable Char
  where listAssert = assertString
@@ -166,29 +176,26 @@ infix  1 @?, @=?, @?=
 
 -- | Asserts that the condition obtained from the specified
 --   'AssertionPredicable' holds.
-(@?) :: WithLocation ((AssertionPredicable t)
+(@?) :: with_loc (AssertionPredicable t)
                                 => t          -- ^ A value of which the asserted condition is predicated
                                 -> String     -- ^ A message that is displayed if the assertion fails
                                 -> Assertion
-                                )
 predi @? msg = assertionPredicate predi >>= assertBool msg
 
 -- | Asserts that the specified actual value is equal to the expected value
 --   (with the expected value on the left-hand side).
-(@=?) :: WithLocation ((Eq a, Show a)
+(@=?) :: with_loc (Eq a, Show a)
                         => a -- ^ The expected value
                         -> a -- ^ The actual value
                         -> Assertion
-                        )
 expected @=? actual = assertEqual "" expected actual
 
 -- | Asserts that the specified actual value is equal to the expected value
 --   (with the actual value on the left-hand side).
-(@?=) :: WithLocation ((Eq a, Show a)
+(@?=) :: with_loc (Eq a, Show a)
                         => a -- ^ The actual value
                         -> a -- ^ The expected value
                         -> Assertion
-                        )
 actual @?= expected = assertEqual "" expected actual
 
 
@@ -216,7 +223,7 @@ instance Show Test where
 
 -- | Provides a way to convert data into a @Test@ or set of @Test@.
 class Testable t
- where test :: WithLocation (t -> Test)
+ where test :: with_loc t -> Test
 
 instance Testable Test
  where test = id
@@ -236,31 +243,28 @@ infixr 0 ~:
 
 -- | Creates a test case resulting from asserting the condition obtained
 --   from the specified 'AssertionPredicable'.
-(~?) :: WithLocation ((AssertionPredicable t)
+(~?) :: with_loc (AssertionPredicable t)
                                 => t       -- ^ A value of which the asserted condition is predicated
                                 -> String  -- ^ A message that is displayed on test failure
                                 -> Test
-                                )
 predi ~? msg = TestCase (predi @? msg)
 
 -- | Shorthand for a test case that asserts equality (with the expected
 --   value on the left-hand side, and the actual value on the right-hand
 --   side).
-(~=?) :: WithLocation ((Eq a, Show a)
+(~=?) :: with_loc (Eq a, Show a)
                         => a     -- ^ The expected value
                         -> a     -- ^ The actual value
                         -> Test
-                        )
 expected ~=? actual = TestCase (expected @=? actual)
 
 -- | Shorthand for a test case that asserts equality (with the actual
 --   value on the left-hand side, and the expected value on the right-hand
 --   side).
-(~?=) :: WithLocation ((Eq a, Show a)
+(~?=) :: with_loc (Eq a, Show a)
                         => a     -- ^ The actual value
                         -> a     -- ^ The expected value
                         -> Test
-                        )
 actual ~?= expected = TestCase (actual @?= expected)
 
 -- | Creates a test from the specified 'Testable', with the specified
@@ -268,7 +272,7 @@ actual ~?= expected = TestCase (actual @?= expected)
 --
 -- Since 'Test' is @Testable@, this can be used as a shorthand way of attaching
 -- a 'TestLabel' to one or more tests.
-(~:) :: WithLocation ((Testable t) => String -> t -> Test)
+(~:) :: with_loc (Testable t) => String -> t -> Test
 label ~: t = TestLabel label (test t)
 
 
