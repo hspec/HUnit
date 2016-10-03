@@ -1,52 +1,63 @@
-Name:                   HUnit
-Version:                1.3.1.2
-Cabal-Version:          >= 1.8
-License:                BSD3
-License-File:           LICENSE
-Author:                 Dean Herington
-Maintainer:             Simon Hengel <sol@typeful.net>
-Stability:              stable
-Homepage:               https://github.com/hspec/HUnit#readme
-Category:               Testing
-Synopsis:               A unit testing framework for Haskell
-Description:
-    HUnit is a unit testing framework for Haskell, inspired by the
-    JUnit tool for Java, see: <http://www.junit.org>.
-Build-Type:             Simple
-Extra-Source-Files:
-    CHANGELOG.md
-    README.md
-    examples/Example.hs
+-- This file has been generated from package.yaml by hpack version 0.15.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:                   HUnit
+version:                1.3.1.2
+cabal-version:          >= 1.10
+license:                BSD3
+license-file:           LICENSE
+author:                 Dean Herington
+maintainer:             Simon Hengel <sol@typeful.net>
+stability:              stable
+homepage:               https://github.com/hspec/HUnit#readme
+bug-reports:            https://github.com/hspec/HUnit/issues
+category:               Testing
+synopsis:               A unit testing framework for Haskell
+description:            HUnit is a unit testing framework for Haskell, inspired by the
+                        JUnit tool for Java, see: <http://www.junit.org>.
+build-type:             Simple
+
+extra-source-files:
+  CHANGELOG.md
+  README.md
 
 source-repository head
-    type:     git
-    location: https://github.com/hspec/HUnit
+  type: git
+  location: https://github.com/hspec/HUnit
 
-Library
-    Build-Depends:
-        base == 4.*,
-        deepseq
-    Exposed-Modules:
-        Test.HUnit.Base,
-        Test.HUnit.Lang,
-        Test.HUnit.Terminal,
-        Test.HUnit.Text,
-        Test.HUnit
-    GHC-Options: -Wall
+library
+  hs-source-dirs:
+    src
+  build-depends:
+    base == 4.*,
+    deepseq
+  exposed-modules:
+    Test.HUnit.Base
+    Test.HUnit.Lang
+    Test.HUnit.Terminal
+    Test.HUnit.Text
+    Test.HUnit
+  other-modules:
+    Paths_HUnit
+  default-language: Haskell2010
+  ghc-options: -Wall
 
-Test-Suite tests
-    Type:               exitcode-stdio-1.0
-    Main-Is:            HUnitTests.hs
-    HS-Source-Dirs:     tests, examples
-    Build-Depends:
-        base == 4.*,
-        deepseq,
-        filepath,
-        HUnit
-    Other-Modules:
-        HUnitTests
-        HUnitTestBase
-        HUnitTestExtended
-        TerminalTest
-        Example
-    GHC-Options:        -Wall
+test-suite tests
+  type: exitcode-stdio-1.0
+  main-is: HUnitTests.hs
+  hs-source-dirs:
+    tests
+    examples
+  build-depends:
+    base == 4.*,
+    deepseq,
+    filepath,
+    HUnit
+  other-modules:
+    HUnitTestBase
+    HUnitTestExtended
+    TerminalTest
+    Example
+  default-language: Haskell2010
+  ghc-options: -Wall
