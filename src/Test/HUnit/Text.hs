@@ -7,7 +7,8 @@ module Test.HUnit.Text
   putTextToHandle, putTextToShowS,
   runTestText,
   showPath, showCounts,
-  runTestTT
+  runTestTT,
+  runTestTTAndExit
 )
 where
 
@@ -16,6 +17,7 @@ import Test.HUnit.Base
 import Data.CallStack
 import Control.Monad (when)
 import System.IO (Handle, stderr, hPutStr, hPutStrLn)
+import System.Exit (exitSuccess, exitFailure)
 
 
 -- | As the general text-based test controller ('runTestText') executes a
@@ -130,3 +132,21 @@ showPath nodes = foldl1 f (map showNode nodes)
 runTestTT :: Test -> IO Counts
 runTestTT t = do (counts', 0) <- runTestText (putTextToHandle stderr True) t
                  return counts'
+
+-- | Convenience wrapper for 'runTestTT'.
+--   Simply runs 'runTestTT' and then exits back to the OS,
+--   using 'exitSuccess' if there were no errors or failures,
+--   or 'exitFailure' if there were. For example:
+--
+--   > tests :: Test
+--   > tests = ...
+--   >
+--   > main :: IO ()
+--   > main = runTestTTAndExit tests
+
+runTestTTAndExit :: Test -> IO ()
+runTestTTAndExit tests = do
+  c <- runTestTT tests
+  if (errors c == 0) && (failures c == 0)
+    then exitSuccess
+    else exitFailure
