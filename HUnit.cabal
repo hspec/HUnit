@@ -3,7 +3,7 @@
 -- see: https://github.com/sol/hpack
 
 name:                   HUnit
-version:                1.5.0.0
+version:                1.6.0.0
 cabal-version:          >= 1.10
 license:                BSD3
 license-file:           LICENSE
