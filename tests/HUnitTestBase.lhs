@@ -81,7 +81,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 > ok :: Test
 > ok = test (assert ())
 > bad :: String -> Test
-> bad m = test (assertFailure m)
+> bad m = test (assertFailure m :: Assertion)
 
 
 > assertTests :: Test
@@ -108,7 +108,7 @@ HUnitTestBase.lhs  --  test support and basic tests (Haskell 98 compliant)
 
 >   "assertFailure" ~:
 >     let msg = "simple assertFailure"
->     in expectFailure msg (test (assertFailure msg)),
+>     in expectFailure msg (test (assertFailure msg :: Assertion)),
 
 >   "assertString null" ~: expectSuccess (TestCase (assertString "")),
 

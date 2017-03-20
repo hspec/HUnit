@@ -1,5 +1,9 @@
 ## Changes
 
+#### 1.6.0.0
+
+- Generalize return type of `assertFailure` to `IO a`
+
 #### 1.5.0.0
 
 - Preserve actual/expected for `assertEqual` failures

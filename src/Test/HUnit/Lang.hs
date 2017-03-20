@@ -55,7 +55,7 @@ location = case reverse callStack of
 assertFailure ::
      HasCallStack =>
      String -- ^ A message that is displayed with the assertion failure
-  -> Assertion
+  -> IO a
 assertFailure msg = msg `deepseq` E.throwIO (HUnitFailure location $ Reason msg)
 
 -- | Asserts that the specified actual value is equal to the expected value.
