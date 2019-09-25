@@ -143,7 +143,7 @@ With `assertBool` you give the assertion condition and failure message separatel
  With `assertString` the two are combined. With `assertEqual` you provide a
  "preface", an expected value, and an actual value; the failure message shows the two
  unequal values and is prefixed by the preface. Additional ways to create assertions are
- described later under [Avanced Features](#advanced-features)
+ described later under [Advanced Features](#advanced-features)
 
 Since assertions are `IO` computations, they may be combined--along with other
      `IO` computations--using `(>>=)`, `(>>)`, and the `do`
