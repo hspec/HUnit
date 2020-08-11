@@ -49,7 +49,7 @@ location = case reverse callStack of
 --
 -- @
 --    if conditionIsMet
---        then IO ()
+--        then return ()
 --        else assertFailure msg
 -- @
 assertFailure ::
