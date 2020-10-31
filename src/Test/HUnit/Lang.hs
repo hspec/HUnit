@@ -44,14 +44,7 @@ location = case reverse callStack of
   (_, loc) : _ -> Just loc
   [] -> Nothing
 
--- | Unconditionally signals that a failure has occurred.  All
--- other assertions can be expressed with the form:
---
--- @
---    if conditionIsMet
---        then IO ()
---        else assertFailure msg
--- @
+-- | Unconditionally signals that a failure has occurred.
 assertFailure ::
      HasCallStack =>
      String -- ^ A message that is displayed with the assertion failure
