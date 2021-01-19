@@ -1,11 +1,11 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.3.
 --
 -- see: https://github.com/sol/hpack
 
 name:                   HUnit
-version:                1.6.1.0
+version:                1.6.2.0
 license:                BSD3
 license-file:           LICENSE
 author:                 Dean Herington
@@ -31,7 +31,7 @@ library
     src
   build-depends:
     base ==4.*,
-    call-stack,
+    call-stack >=0.3.0,
     deepseq
   exposed-modules:
     Test.HUnit.Base
@@ -53,7 +53,7 @@ test-suite tests
   build-depends:
     HUnit,
     base ==4.*,
-    call-stack,
+    call-stack >=0.3.0,
     deepseq,
     filepath
   other-modules:

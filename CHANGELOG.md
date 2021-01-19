@@ -1,5 +1,13 @@
 ## Changes
 
+#### 1.6.2.0
+
+- Add support for GHC 7.0.* and 7.2.*
+
+#### 1.6.1.0
+
+- Add `Test.HUnit.Text.runTestTTAndExit`
+
 #### 1.6.0.0
 
 - Generalize return type of `assertFailure` to `IO a`
