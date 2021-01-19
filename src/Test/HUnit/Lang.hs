@@ -1,6 +1,13 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DeriveDataTypeable #-}
-{-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
+
+#if __GLASGOW_HASKELL__ >= 704
+{-# LANGUAGE ConstraintKinds #-}
+#define HasCallStack_ HasCallStack =>
+#else
+#define HasCallStack_
+#endif
 
 module Test.HUnit.Lang (
   Assertion,
@@ -39,14 +46,14 @@ instance Exception HUnitFailure
 data FailureReason = Reason String | ExpectedButGot (Maybe String) String String
     deriving (Eq, Show, Typeable)
 
-location :: HasCallStack => Maybe SrcLoc
+location :: HasCallStack_ Maybe SrcLoc
 location = case reverse callStack of
   (_, loc) : _ -> Just loc
   [] -> Nothing
 
 -- | Unconditionally signals that a failure has occurred.
 assertFailure ::
-     HasCallStack =>
+     HasCallStack_
      String -- ^ A message that is displayed with the assertion failure
   -> IO a
 assertFailure msg = msg `deepseq` E.throwIO (HUnitFailure location $ Reason msg)
@@ -57,7 +64,7 @@ assertFailure msg = msg `deepseq` E.throwIO (HUnitFailure location $ Reason msg)
 --
 -- If the prefix is the empty string (i.e., @\"\"@), then the prefix is omitted
 -- and only the expected and actual values are output.
-assertEqual :: (HasCallStack, Eq a, Show a)
+assertEqual :: HasCallStack_ (Eq a, Show a)
                               => String -- ^ The message prefix
                               -> a      -- ^ The expected value
                               -> a      -- ^ The actual value

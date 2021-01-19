@@ -7,8 +7,6 @@ on:
   pull_request:
     branches:
       - main
-  schedule:
-    - cron: 0 0 * * *
 
 jobs:
   build:
@@ -20,6 +18,12 @@ jobs:
         os:
           - ubuntu-16.04 # https://launchpad.net/~hvr/+archive/ubuntu/ghc?field.series_filter=xenial
         ghc:
+          - 7.0.1
+          - 7.0.2
+          - 7.0.3
+          - 7.0.4
+          - 7.2.1
+          - 7.2.2
           - 7.4.1
           - 7.4.2
           - 7.6.1
@@ -51,6 +55,7 @@ jobs:
           - 8.8.4
           - 8.10.1
           - 8.10.2
+          - 8.10.3
         include:
           - os: macos-latest
             ghc: latest
