@@ -1,5 +1,12 @@
-{-# LANGUAGE ConstraintKinds #-}
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE FlexibleContexts #-}
+
+#if __GLASGOW_HASKELL__ >= 704
+{-# LANGUAGE ConstraintKinds #-}
+#define HasCallStack_ HasCallStack =>
+#else
+#define HasCallStack_
+#endif
 
 -- | Basic definitions for the HUnit library.
 --
@@ -52,16 +59,16 @@ import Test.HUnit.Lang
 -- -------------------------------
 
 -- | Asserts that the specified condition holds.
-assertBool :: HasCallStack
-           => String    -- ^ The message that is displayed if the assertion fails
+assertBool :: HasCallStack_
+              String    -- ^ The message that is displayed if the assertion fails
            -> Bool      -- ^ The condition
            -> Assertion
 assertBool msg b = unless b (assertFailure msg)
 
 -- | Signals an assertion failure if a non-empty message (i.e., a message
 -- other than @\"\"@) is passed.
-assertString :: HasCallStack
-             => String    -- ^ The message that is displayed with the assertion failure
+assertString :: HasCallStack_
+                String    -- ^ The message that is displayed with the assertion failure
              -> Assertion
 assertString s = unless (null s) (assertFailure s)
 
@@ -79,7 +86,7 @@ assertString s = unless (null s) (assertFailure s)
 -- If more complex arrangements of assertions are needed, 'Test's and
 -- 'Testable' should be used.
 class Assertable t
- where assert :: HasCallStack => t -> Assertion
+ where assert :: HasCallStack_ t -> Assertion
 
 instance Assertable ()
  where assert = return
@@ -95,7 +102,7 @@ instance (Assertable t) => Assertable (IO t)
 
 -- | A specialized form of 'Assertable' to handle lists.
 class ListAssertable t
- where listAssert :: HasCallStack => [t] -> Assertion
+ where listAssert :: HasCallStack_ [t] -> Assertion
 
 instance ListAssertable Char
  where listAssert = assertString
@@ -147,7 +154,7 @@ infix  1 @?, @=?, @?=
 
 -- | Asserts that the condition obtained from the specified
 --   'AssertionPredicable' holds.
-(@?) :: (HasCallStack, AssertionPredicable t)
+(@?) :: HasCallStack_ AssertionPredicable t
                                 => t          -- ^ A value of which the asserted condition is predicated
                                 -> String     -- ^ A message that is displayed if the assertion fails
                                 -> Assertion
@@ -155,7 +162,7 @@ predi @? msg = assertionPredicate predi >>= assertBool msg
 
 -- | Asserts that the specified actual value is equal to the expected value
 --   (with the expected value on the left-hand side).
-(@=?) :: (HasCallStack, Eq a, Show a)
+(@=?) :: HasCallStack_ (Eq a, Show a)
                         => a -- ^ The expected value
                         -> a -- ^ The actual value
                         -> Assertion
@@ -163,7 +170,7 @@ expected @=? actual = assertEqual "" expected actual
 
 -- | Asserts that the specified actual value is equal to the expected value
 --   (with the actual value on the left-hand side).
-(@?=) :: (HasCallStack, Eq a, Show a)
+(@?=) :: HasCallStack_ (Eq a, Show a)
                         => a -- ^ The actual value
                         -> a -- ^ The expected value
                         -> Assertion
@@ -194,7 +201,7 @@ instance Show Test where
 
 -- | Provides a way to convert data into a @Test@ or set of @Test@.
 class Testable t
- where test :: HasCallStack => t -> Test
+ where test :: HasCallStack_ t -> Test
 
 instance Testable Test
  where test = id
@@ -214,7 +221,7 @@ infixr 0 ~:
 
 -- | Creates a test case resulting from asserting the condition obtained
 --   from the specified 'AssertionPredicable'.
-(~?) :: (HasCallStack, AssertionPredicable t)
+(~?) :: HasCallStack_ AssertionPredicable t
                                 => t       -- ^ A value of which the asserted condition is predicated
                                 -> String  -- ^ A message that is displayed on test failure
                                 -> Test
@@ -223,7 +230,7 @@ predi ~? msg = TestCase (predi @? msg)
 -- | Shorthand for a test case that asserts equality (with the expected
 --   value on the left-hand side, and the actual value on the right-hand
 --   side).
-(~=?) :: (HasCallStack, Eq a, Show a)
+(~=?) :: HasCallStack_ (Eq a, Show a)
                         => a     -- ^ The expected value
                         -> a     -- ^ The actual value
                         -> Test
@@ -232,7 +239,7 @@ expected ~=? actual = TestCase (expected @=? actual)
 -- | Shorthand for a test case that asserts equality (with the actual
 --   value on the left-hand side, and the expected value on the right-hand
 --   side).
-(~?=) :: (HasCallStack, Eq a, Show a)
+(~?=) :: HasCallStack_ (Eq a, Show a)
                         => a     -- ^ The actual value
                         -> a     -- ^ The expected value
                         -> Test
@@ -243,7 +250,7 @@ actual ~?= expected = TestCase (actual @?= expected)
 --
 -- Since 'Test' is @Testable@, this can be used as a shorthand way of attaching
 -- a 'TestLabel' to one or more tests.
-(~:) :: (HasCallStack, Testable t) => String -> t -> Test
+(~:) :: HasCallStack_ Testable t => String -> t -> Test
 label ~: t = TestLabel label (test t)
 
 
