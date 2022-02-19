@@ -1,5 +1,0 @@
-packages:
-  HUnit.cabal
-
-package HUnit
-  ghc-options: -Werror
