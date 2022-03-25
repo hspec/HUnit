@@ -67,7 +67,7 @@ putTextToHandle handle showProgress = PutText put initCnt
   erase cnt = if cnt == 0 then "" else "\r" ++ replicate cnt ' ' ++ "\r"
 
 
--- | Accumulates persistent lines (dropping progess lines) for return by
+-- | Accumulates persistent lines (dropping progress lines) for return by
 --   'runTestText'.  The accumulated lines are represented by a
 --   @'ShowS' ('String' -> 'String')@ function whose first argument is the
 --   string to be appended to the accumulated report lines.
