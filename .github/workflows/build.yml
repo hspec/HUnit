@@ -16,29 +16,17 @@ jobs:
     strategy:
       matrix:
         os:
-          - ubuntu-16.04 # https://launchpad.net/~hvr/+archive/ubuntu/ghc?field.series_filter=xenial
+          - ubuntu-18.04
         ghc:
           - 7.0.1
-          - 7.0.2
-          - 7.0.3
           - 7.0.4
-          - 7.2.1
           - 7.2.2
           - 7.4.1
           - 7.4.2
-          - 7.6.1
-          - 7.6.2
           - 7.6.3
-          - 7.8.1
-          - 7.8.2
-          - 7.8.3
           - 7.8.4
-          - 7.10.1
-          - 7.10.2
           - 7.10.3
-          - 8.0.1
           - 8.0.2
-          - 8.2.1
           - 8.2.2
           - 8.4.1
           - 8.4.2
@@ -56,14 +44,22 @@ jobs:
           - 8.10.1
           - 8.10.2
           - 8.10.3
+          - 8.10.4
+          - 8.10.5
+          - 8.10.6
+          - 8.10.7
+          - 9.0.1
+          - 9.0.2
+          - 9.2.1
+          - 9.2.2
         include:
           - os: macos-latest
             ghc: latest
           - os: windows-latest
             ghc: latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: haskell/actions/setup@v1
+      - uses: actions/checkout@v3
+      - uses: hspec/setup-haskell@v1
         with:
           ghc-version: ${{ matrix.ghc }}
       - uses: sol/run-haskell-tests@v1
