@@ -172,7 +172,7 @@ You can make a test case from an assertion by applying the `TestCase` constructo
  For example, `(TestCase (return ()))` is a test case that never
  fails, and `(TestCase (assertEqual "for x," 3 x))`
  is a test case that checks that the value of `x` is 3.  Additional ways
- to create test cases are described later under [Advanced Features](#advanced-eatures).
+ to create test cases are described later under [Advanced Features](#advanced-features).
 
 ### Tests
 
