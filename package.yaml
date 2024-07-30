@@ -16,7 +16,8 @@ extra-source-files:
   - README.md
 
 dependencies:
-  - base == 4.*
+  # GHC >= 8.0 required for -Wno-unrecognised-warning-flags
+  - base >= 4.9
   - deepseq
   - call-stack >= 0.3.0
 

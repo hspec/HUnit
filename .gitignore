@@ -1,2 +1,5 @@
 /dist/
 /HunitTest.tmp
+/.stack-work/
+/dist-newstyle/
+/stack*.yaml.lock

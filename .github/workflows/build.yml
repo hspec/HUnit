@@ -14,51 +14,30 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
       matrix:
         os:
-          - ubuntu-18.04
+          - ubuntu-latest
         ghc:
-          - 7.0.1
-          - 7.0.4
-          - 7.2.2
-          - 7.4.1
-          - 7.4.2
-          - 7.6.3
-          - 7.8.4
-          - 7.10.3
           - 8.0.2
           - 8.2.2
-          - 8.4.1
-          - 8.4.2
-          - 8.4.3
           - 8.4.4
-          - 8.6.1
-          - 8.6.2
-          - 8.6.3
-          - 8.6.4
           - 8.6.5
-          - 8.8.1
-          - 8.8.2
-          - 8.8.3
           - 8.8.4
-          - 8.10.1
-          - 8.10.2
-          - 8.10.3
-          - 8.10.4
-          - 8.10.5
-          - 8.10.6
           - 8.10.7
-          - 9.0.1
           - 9.0.2
-          - 9.2.1
-          - 9.2.2
+          - 9.2.8
+          - 9.4.8
+          - 9.6.6
+          - 9.8.2
+          - 9.10.1
         include:
           - os: macos-latest
             ghc: latest
           - os: windows-latest
             ghc: latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: hspec/setup-haskell@v1
         with:
           ghc-version: ${{ matrix.ghc }}
