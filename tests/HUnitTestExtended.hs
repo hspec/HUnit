@@ -1,3 +1,6 @@
+{-# OPTIONS_GHC -Wno-unrecognised-warning-flags #-}  -- since GHC 8.0
+{-# OPTIONS_GHC -Wno-x-partial #-}                   -- since GHC 9.8
+
 module HUnitTestExtended (extendedTests) where
 
 import Test.HUnit
