@@ -9,6 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: augustss/MicroHs@nightly
+      - uses: sol/MicroHs@nightly
       - uses: actions/checkout@v4
       - run: mcabal -r build
