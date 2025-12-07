@@ -1,0 +1,14 @@
+name: MicroHs
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: sol/MicroHs@setup-action
+      - uses: actions/checkout@v4
+      - run: mcabal -r build
